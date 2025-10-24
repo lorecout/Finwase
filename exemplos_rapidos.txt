@@ -1,0 +1,34 @@
+# 📋 EXEMPLOS RÁPIDOS PARA COPIAR
+
+## 💵 RECEITAS:
+Salário mensal - R$ 3.500,00
+Freelance desenvolvimento app - R$ 800,00
+Dividendos ações - R$ 150,00
+Aluguel imóvel - R$ 1.200,00
+Venda notebook usado - R$ 2.200,00
+
+## 💸 DESPESAS:
+Aluguel apartamento - R$ 1.500,00
+Supermercado semanal - R$ 280,00
+Conta luz - R$ 89,00
+Restaurante jantar - R$ 85,00
+Combustível carro - R$ 150,00
+Plano saúde - R$ 180,00
+Curso Flutter - R$ 497,00
+Café da manhã - R$ 12,00
+Uber trabalho - R$ 25,00
+Cinema casal - R$ 42,00
+
+## 📊 PARA RELATÓRIOS:
+Compra carro novo - R$ 45.000,00
+Viagem Europa - R$ 8.500,00
+Reforma cozinha - R$ 12.000,00
+Novo celular - R$ 2.499,00
+Tênis Nike - R$ 329,00
+
+## 🔄 RECURRENTES:
+Netflix assinatura - R$ 39,90
+Academia mensal - R$ 89,00
+Seguro carro - R$ 180,00
+Mercado semanal - R$ 280,00
+Café manhã - R$ 8,00

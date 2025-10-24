@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - FinWise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-card.premium .value { color: #38a169; }
+                .stat-card.free {
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e0);
+            border-left: 4px solid #a0aec0;
+        }
+
+        .stat-card.free .value {
+            color: #4a5568;
+        }
+        .stat-card.total .value { color: #805ad5; }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .users-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .users-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .user-card {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            background: #edf2f7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-card.premium {
+            border-left-color: #38a169;
+            background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        }
+
+        .user-card.trial {
+            border-left-color: #3182ce;
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .user-email {
+            color: #718096;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .user-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-premium {
+            background: #38a169;
+            color: white;
+        }
+
+        .status-trial {
+            background: #3182ce;
+            color: white;
+        }
+
+        .status-free {
+            background: #a0aec0;
+            color: white;
+        }
+
+        .user-expiry {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #d69e2e 0%, #b7791f 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            margin: 50px auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+        }
+
+        .user-details {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .user-details h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .user-details p {
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: none;
+            color: #718096;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-btn:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .admin-management {
+            padding: 20px 0;
+        }
+
+        .admin-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-list-header h3 {
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .admin-card {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #38a169;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-info {
+            flex: 1;
+        }
+
+        .admin-email {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .admin-role {
+            color: #38a169;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-danger-small {
+            background: #fed7d7;
+            color: #e53e3e;
+        }
+
+        .btn-danger-small:hover {
+            background: #feb2b2;
+        }
+
+        .analytics-content {
+            padding: 20px 0;
+        }
+
+        .analytics-content h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .analytics-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .analytics-card h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            color: #4a5568;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Painel Administrativo - FinWise</h1>
+            <div class="subtitle">Gerencie usuários premium e configurações do sistema</div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <h3>Usuários Totais</h3>
+                <div class="value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card premium">
+                <h3>Usuários Premium</h3>
+                <div class="value" id="premiumUsers">0</div>
+            </div>
+            <div class="stat-card trial">
+                <h3>Em Trial</h3>
+                <div class="value" id="trialUsers">0</div>
+            </div>
+            <div class="stat-card free">
+                <h3>Usuários Free</h3>
+                <div class="value" id="freeUsers">0</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="users-section">
+                <div class="section-title">👥 Usuários do Sistema</div>
+
+                <!-- Abas para alternar entre usuários e admins -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="showTab('users')">Usuários</button>
+                    <button class="tab-btn" onclick="showTab('admins')">Administradores</button>
+                    <button class="tab-btn" onclick="showTab('analytics')">Analytics</button>
+                </div>
+
+                <!-- Conteúdo da aba Usuários -->
+                <div id="usersTab" class="tab-content active">
+                    <input type="text" class="search-bar" id="searchInput" placeholder="Buscar por nome ou email...">
+
+                    <div class="users-list" id="usersList">
+                        <div class="loading" style="display: block; margin: 50px auto;"></div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo da aba Administradores -->
+                <div id="adminsTab" class="tab-content">
+                    <div class="admin-management">
+                        <div class="admin-list-header">
+                            <h3>👑 Administradores Atuais</h3>
+                            <button class="action-btn btn-success" onclick="showModal('addAdmin')">
+                                ➕ Adicionar Admin
+                            </button>
+                        </div>
+
+                        <div class="admin-list" id="adminList">
+                            <div class="loading" style="display: block; margin: 50px auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo da aba Analytics -->
+                <div id="analyticsTab" class="tab-content">
+                    <div class="analytics-content">
+                        <h3>📊 Estatísticas do Sistema</h3>
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h4>Distribuição de Usuários</h4>
+                                <div class="chart-container" id="userDistributionChart">
+                                    <div class="loading" style="display: block; margin: 50px auto;"></div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h4>Receita Mensal Estimada</h4>
+                                <div class="chart-container" id="revenueChart">
+                                    <div class="loading" style="display: block; margin: 50px auto;"></div>
+                                </div>
+                            </div>
+
+                            <div class="analytics-card">
+                                <h4>Métricas Gerais</h4>
+                                <div class="metric-item">
+                                    <span class="metric-label">Usuários Totais</span>
+                                    <span class="metric-value" id="totalUsersMetric">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Usuários Premium</span>
+                                    <span class="metric-value" id="premiumUsersMetric">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Em Trial</span>
+                                    <span class="metric-value" id="trialUsersMetric">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Usuários Free</span>
+                                    <span class="metric-value" id="freeUsersMetric">0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Novos cadastros (30d)</span>
+                                    <span class="metric-value" id="recentSignupsMetric">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="section-title">⚡ Ações Rápidas</div>
+
+                <button class="action-btn btn-primary" onclick="showModal('grantPremium')">
+                    ➕ Conceder Premium
+                </button>
+
+                <button class="action-btn btn-warning" onclick="showModal('extendPremium')">
+                    ⏰ Estender Premium
+                </button>
+
+                <button class="action-btn btn-danger" onclick="showModal('removePremium')">
+                    ❌ Remover Premium
+                </button>
+
+                <button class="action-btn btn-success" onclick="refreshUsers()">
+                    🔄 Atualizar Lista
+                </button>
+
+                <div style="margin-top: 30px;">
+                    <div class="section-title">👤 Usuário Selecionado</div>
+                    <div id="selectedUserInfo">
+                        <p style="color: #a0aec0; font-size: 12px;">Selecione um usuário para ver detalhes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para ações -->
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Ação</h2>
+
+            <div id="modalContent">
+                <!-- Conteúdo dinâmico será inserido aqui -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="action-btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="action-btn btn-primary" id="confirmAction" onclick="executeAction()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            doc,
+            getDoc,
+            updateDoc,
+            serverTimestamp,
+            query,
+            where
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            // ⚠️ IMPORTANTE: Substitua pelas suas configurações do Firebase
+            apiKey: "your-api-key",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "your-app-id"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Estado da aplicação
+        let currentUser = null;
+        let selectedUser = null;
+        let allUsers = [];
+        let isCurrentUserSuperAdmin = false;
+
+        // Lista de emails de administradores (mesma do app Flutter)
+        const adminEmails = [
+            'lorenalessa90@gmail.com',
+            'admin@finwise.com'
+        ];
+
+        // SUPER ADMIN - Apenas você tem acesso às configurações de admin
+        const SUPER_ADMIN_EMAIL = 'lorenalessa90@gmail.com';
+
+        // Verificar se usuário é admin
+        function isAdmin(email) {
+            return adminEmails.includes(email?.toLowerCase());
+        }
+
+        // Verificar se usuário é SUPER admin (apenas você)
+        function isSuperAdmin(email) {
+            return email?.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+        }
+
+        // Mostrar alertas
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+
+        // Carregar usuários
+        async function loadUsers() {
+            try {
+                const usersList = document.getElementById('usersList');
+                usersList.innerHTML = '<div class="loading" style="display: block; margin: 50px auto;"></div>';
+
+                const querySnapshot = await getDocs(collection(db, 'users'));
+                allUsers = [];
+
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    allUsers.push({
+                        id: doc.id,
+                        ...userData
+                    });
+                });
+
+                updateStats();
+                renderUsers(allUsers);
+
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                showAlert('Erro ao carregar usuários: ' + error.message, 'error');
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const totalUsers = allUsers.length;
+            const premiumUsers = allUsers.filter(u => u.isPremium && u.currentPlan !== 'trial').length;
+            const trialUsers = allUsers.filter(u => u.currentPlan === 'trial').length;
+            const freeUsers = totalUsers - premiumUsers - trialUsers;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('premiumUsers').textContent = premiumUsers;
+            document.getElementById('trialUsers').textContent = trialUsers;
+            document.getElementById('freeUsers').textContent = freeUsers;
+        }
+
+        // Renderizar lista de usuários
+        function renderUsers(users) {
+            const usersList = document.getElementById('usersList');
+
+            if (users.length === 0) {
+                usersList.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 40px;">Nenhum usuário encontrado</p>';
+                return;
+            }
+
+            usersList.innerHTML = users.map(user => {
+                const statusClass = user.isPremium ? (user.currentPlan === 'trial' ? 'trial' : 'premium') : '';
+                const statusText = user.isPremium ? (user.currentPlan === 'trial' ? 'Trial' : 'Premium') : 'Free';
+                const statusClassName = user.isPremium ? (user.currentPlan === 'trial' ? 'status-trial' : 'status-premium') : 'status-free';
+
+                const expiryDate = user.premiumExpiryDate ? new Date(user.premiumExpiryDate.seconds * 1000) : null;
+                const expiryText = expiryDate ? `Expira: ${expiryDate.toLocaleDateString('pt-BR')}` : '';
+
+                return `
+                    <div class="user-card ${statusClass}" onclick="selectUser('${user.id}')">
+                        <div class="user-name">${user.displayName || 'Nome não informado'}</div>
+                        <div class="user-email">${user.email || 'Email não informado'}</div>
+                        <span class="user-status ${statusClassName}">${statusText}</span>
+                        ${expiryText ? `<div class="user-expiry">${expiryText}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Selecionar usuário
+        window.selectUser = function(userId) {
+            selectedUser = allUsers.find(u => u.id === userId);
+            if (!selectedUser) return;
+
+            const expiryDate = selectedUser.premiumExpiryDate ?
+                new Date(selectedUser.premiumExpiryDate.seconds * 1000).toLocaleDateString('pt-BR') : 'N/A';
+
+            const info = document.getElementById('selectedUserInfo');
+            info.innerHTML = `
+                <div class="user-details">
+                    <h4>${selectedUser.displayName || 'Nome não informado'}</h4>
+                    <p><strong>Email:</strong> ${selectedUser.email || 'N/A'}</p>
+                    <p><strong>Status:</strong> ${selectedUser.isPremium ? 'Premium' : 'Free'}</p>
+                    <p><strong>Plano:</strong> ${selectedUser.currentPlan || 'N/A'}</p>
+                    <p><strong>Expiração:</strong> ${expiryDate}</p>
+                    <p><strong>UID:</strong> ${selectedUser.id}</p>
+                </div>
+            `;
+
+            // Remover seleção anterior
+            document.querySelectorAll('.user-card').forEach(card => {
+                card.style.borderLeftWidth = '4px';
+            });
+
+            // Adicionar seleção atual
+            event.currentTarget.style.borderLeftWidth = '6px';
+        };
+
+        // Mostrar modal
+        window.showModal = function(action) {
+            if (!selectedUser) {
+                showAlert('Selecione um usuário primeiro', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('actionModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const confirmBtn = document.getElementById('confirmAction');
+
+            modal.style.display = 'block';
+
+            switch (action) {
+                case 'grantPremium':
+                    modalTitle.textContent = 'Conceder Premium';
+                    modalContent.innerHTML = `
+                        <div class="form-group">
+                            <label for="days">Dias de Premium:</label>
+                            <input type="number" id="days" min="1" max="365" value="30" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reason">Motivo (opcional):</label>
+                            <textarea id="reason" placeholder="Ex: Cliente VIP, Teste, etc."></textarea>
+                        </div>
+                    `;
+                    confirmBtn.onclick = () => executeGrantPremium();
+                    break;
+
+                case 'extendPremium':
+                    modalTitle.textContent = 'Estender Premium';
+                    modalContent.innerHTML = `
+                        <div class="form-group">
+                            <label for="extendDays">Dias adicionais:</label>
+                            <input type="number" id="extendDays" min="1" max="365" value="30" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="extendReason">Motivo (opcional):</label>
+                            <textarea id="extendReason" placeholder="Ex: Renovação, Bônus, etc."></textarea>
+                        </div>
+                    `;
+                    confirmBtn.onclick = () => executeExtendPremium();
+                    break;
+
+                case 'removePremium':
+                    modalTitle.textContent = 'Remover Premium';
+                    modalContent.innerHTML = `
+                        <div class="form-group">
+                            <label for="removeReason">Motivo da remoção:</label>
+                            <textarea id="removeReason" placeholder="Ex: Violação de termos, Solicitação do usuário, etc." required></textarea>
+                        </div>
+                        <p style="color: #e53e3e; font-size: 12px; margin-top: 10px;">
+                            ⚠️ Esta ação irá remover permanentemente o status premium do usuário.
+                        </p>
+                    `;
+                    confirmBtn.onclick = () => executeRemovePremium();
+                    break;
+
+                case 'addAdmin':
+                    if (!isCurrentUserSuperAdmin) {
+                        showAlert('Acesso negado. Apenas o Super Admin pode adicionar administradores.', 'error');
+                        return;
+                    }
+                    modalTitle.textContent = 'Adicionar Administrador';
+                    modalContent.innerHTML = `
+                        <div class="form-group">
+                            <label for="newAdminEmail">Email do novo administrador:</label>
+                            <input type="email" id="newAdminEmail" placeholder="admin@exemplo.com" required>
+                        </div>
+                        <p style="color: #38a169; font-size: 12px; margin-top: 10px;">
+                            ℹ️ O email deve pertencer a uma conta Google válida.
+                        </p>
+                    `;
+                    confirmBtn.onclick = () => addAdmin();
+                    break;
+            }
+        };
+
+        // Fechar modal
+        window.closeModal = function() {
+            document.getElementById('actionModal').style.display = 'none';
+        };
+
+        // Executar concessão de premium
+        async function executeGrantPremium() {
+            const days = parseInt(document.getElementById('days').value);
+            const reason = document.getElementById('reason').value;
+
+            if (!days || days < 1) {
+                showAlert('Número de dias inválido', 'error');
+                return;
+            }
+
+            try {
+                const now = new Date();
+                const expiryDate = new Date(now.getTime() + (days * 24 * 60 * 60 * 1000));
+
+                const updateData = {
+                    isPremium: true,
+                    currentPlan: 'admin',
+                    premiumExpiryDate: expiryDate,
+                    adminGrantedAt: now,
+                    adminGrantedBy: currentUser.uid,
+                    adminReason: reason,
+                    updatedAt: serverTimestamp(),
+                };
+
+                await updateDoc(doc(db, 'users', selectedUser.id), updateData);
+
+                showAlert(`✅ Premium concedido para ${selectedUser.displayName || selectedUser.email} por ${days} dias`);
+                closeModal();
+                loadUsers(); // Recarregar lista
+
+            } catch (error) {
+                console.error('Erro ao conceder premium:', error);
+                showAlert('Erro ao conceder premium: ' + error.message, 'error');
+            }
+        }
+
+        // Executar extensão de premium
+        async function executeExtendPremium() {
+            const additionalDays = parseInt(document.getElementById('extendDays').value);
+            const reason = document.getElementById('extendReason').value;
+
+            if (!additionalDays || additionalDays < 1) {
+                showAlert('Número de dias inválido', 'error');
+                return;
+            }
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', selectedUser.id));
+                const userData = userDoc.data();
+
+                const currentExpiry = userData.premiumExpiryDate ?
+                    new Date(userData.premiumExpiryDate.seconds * 1000) : new Date();
+
+                const newExpiry = new Date(currentExpiry.getTime() + (additionalDays * 24 * 60 * 60 * 1000));
+
+                const updateData = {
+                    isPremium: true,
+                    premiumExpiryDate: newExpiry,
+                    adminExtendedAt: serverTimestamp(),
+                    adminExtendedBy: currentUser.uid,
+                    adminExtendReason: reason,
+                    updatedAt: serverTimestamp(),
+                };
+
+                await updateDoc(doc(db, 'users', selectedUser.id), updateData);
+
+                showAlert(`✅ Premium estendido para ${selectedUser.displayName || selectedUser.email} (+${additionalDays} dias)`);
+                closeModal();
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao estender premium:', error);
+                showAlert('Erro ao estender premium: ' + error.message, 'error');
+            }
+        }
+
+        // Executar remoção de premium
+        async function executeRemovePremium() {
+            const reason = document.getElementById('removeReason').value;
+
+            if (!reason.trim()) {
+                showAlert('Motivo da remoção é obrigatório', 'error');
+                return;
+            }
+
+            try {
+                const updateData = {
+                    isPremium: false,
+                    currentPlan: 'free',
+                    premiumExpiryDate: null,
+                    adminRemovedAt: serverTimestamp(),
+                    adminRemovedBy: currentUser.uid,
+                    adminRemoveReason: reason,
+                    updatedAt: serverTimestamp(),
+                };
+
+                await updateDoc(doc(db, 'users', selectedUser.id), updateData);
+
+                showAlert(`✅ Premium removido de ${selectedUser.displayName || selectedUser.email}`);
+                closeModal();
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao remover premium:', error);
+                showAlert('Erro ao remover premium: ' + error.message, 'error');
+            }
+        }
+
+        // Buscar usuários
+        function searchUsers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            if (!searchTerm) {
+                renderUsers(allUsers);
+                return;
+            }
+
+            const filteredUsers = allUsers.filter(user =>
+                (user.displayName || '').toLowerCase().includes(searchTerm) ||
+                (user.email || '').toLowerCase().includes(searchTerm)
+            );
+
+            renderUsers(filteredUsers);
+        }
+
+        // Atualizar lista
+        window.refreshUsers = function() {
+            loadUsers();
+            showAlert('Lista atualizada com sucesso');
+        };
+
+        // Função para alternar abas
+        window.showTab = function(tabName) {
+            // Verificar permissões para aba de administradores
+            if (tabName === 'admins' && !isCurrentUserSuperAdmin) {
+                showAlert('Acesso negado. Apenas o Super Admin pode gerenciar administradores.', 'error');
+                return;
+            }
+
+            // Esconder todas as abas
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remover classe ativa de todos os botões
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            // Mostrar aba selecionada
+            document.getElementById(tabName + 'Tab').classList.add('active');
+
+            // Adicionar classe ativa ao botão clicado
+            event.target.classList.add('active');
+
+            // Carregar dados da aba selecionada
+            if (tabName === 'admins') {
+                loadAdminList();
+            } else if (tabName === 'analytics') {
+                loadAnalytics();
+            }
+        };
+
+        // Carregar lista de admins
+        async function loadAdminList() {
+            try {
+                const adminListRef = doc(db, 'config', 'adminEmails');
+                const adminListSnap = await getDoc(adminListRef);
+
+                if (adminListSnap.exists()) {
+                    const adminEmails = adminListSnap.data().emails || [];
+                    displayAdminList(adminEmails);
+                } else {
+                    displayAdminList([]);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar lista de admins:', error);
+                showAlert('Erro ao carregar lista de admins', 'error');
+            }
+        }
+
+        // Exibir lista de admins
+        function displayAdminList(adminEmails) {
+            const adminList = document.getElementById('adminList');
+            adminList.innerHTML = '';
+
+            if (adminEmails.length === 0) {
+                adminList.innerHTML = '<p style="text-align: center; color: #718096; padding: 20px;">Nenhum admin cadastrado</p>';
+                return;
+            }
+
+            adminEmails.forEach(email => {
+                const adminCard = document.createElement('div');
+                adminCard.className = 'admin-card';
+                adminCard.innerHTML = `
+                    <div class="admin-info">
+                        <div class="admin-email">${email}</div>
+                        <div class="admin-role">Administrador</div>
+                    </div>
+                    <div class="admin-actions">
+                        <button class="btn-small btn-danger-small" onclick="removeAdmin('${email}')">
+                            Remover
+                        </button>
+                    </div>
+                `;
+                adminList.appendChild(adminCard);
+            });
+        }
+
+        // Adicionar novo admin
+        window.addAdmin = async function() {
+            if (!isCurrentUserSuperAdmin) {
+                showAlert('Acesso negado. Apenas o Super Admin pode adicionar administradores.', 'error');
+                return;
+            }
+
+            const email = document.getElementById('newAdminEmail').value.trim();
+            if (!email) {
+                showAlert('Digite um email válido', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showAlert('Email inválido', 'error');
+                return;
+            }
+
+            try {
+                const adminListRef = doc(db, 'config', 'adminEmails');
+                const adminListSnap = await getDoc(adminListRef);
+
+                let adminEmails = [];
+                if (adminListSnap.exists()) {
+                    adminEmails = adminListSnap.data().emails || [];
+                }
+
+                if (adminEmails.includes(email)) {
+                    showAlert('Este email já é admin', 'error');
+                    return;
+                }
+
+                adminEmails.push(email);
+                await updateDoc(adminListRef, { emails: adminEmails });
+
+                document.getElementById('newAdminEmail').value = '';
+                showAlert('Admin adicionado com sucesso', 'success');
+                loadAdminList();
+            } catch (error) {
+                console.error('Erro ao adicionar admin:', error);
+                showAlert('Erro ao adicionar admin', 'error');
+            }
+        };
+
+        // Remover admin
+        window.removeAdmin = async function(email) {
+            if (!isCurrentUserSuperAdmin) {
+                showAlert('Acesso negado. Apenas o Super Admin pode remover administradores.', 'error');
+                return;
+            }
+
+            if (!confirm(`Tem certeza que deseja remover ${email} da lista de admins?`)) {
+                return;
+            }
+
+            try {
+                const adminListRef = doc(db, 'config', 'adminEmails');
+                const adminListSnap = await getDoc(adminListRef);
+
+                if (adminListSnap.exists()) {
+                    let adminEmails = adminListSnap.data().emails || [];
+                    adminEmails = adminEmails.filter(e => e !== email);
+                    await updateDoc(adminListRef, { emails: adminEmails });
+                }
+
+                showAlert('Admin removido com sucesso', 'success');
+                loadAdminList();
+            } catch (error) {
+                console.error('Erro ao remover admin:', error);
+                showAlert('Erro ao remover admin', 'error');
+            }
+        };
+
+        // Carregar dados de analytics
+        async function loadAnalytics() {
+            try {
+                // Calcular métricas
+                const totalUsers = allUsers.length;
+                const premiumUsers = allUsers.filter(user => user.isPremium && user.currentPlan !== 'trial').length;
+                const trialUsers = allUsers.filter(user => user.currentPlan === 'trial').length;
+                const freeUsers = totalUsers - premiumUsers - trialUsers;
+
+                // Calcular receita (assumindo R$ 9,99/mês para premium)
+                const monthlyRevenue = premiumUsers * 9.99;
+
+                // Novos cadastros nos últimos 30 dias
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                const recentSignups = allUsers.filter(user => {
+                    const createdAt = user.createdAt ? new Date(user.createdAt.toDate()) : new Date();
+                    return createdAt > thirtyDaysAgo;
+                }).length;
+
+                // Atualizar métricas na interface
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('premiumUsers').textContent = premiumUsers;
+                document.getElementById('trialUsers').textContent = trialUsers;
+                document.getElementById('freeUsers').textContent = freeUsers;
+                document.getElementById('monthlyRevenue').textContent = `R$ ${monthlyRevenue.toFixed(2)}`;
+                document.getElementById('recentSignups').textContent = recentSignups;
+
+                // Atualizar métricas na aba analytics
+                document.getElementById('totalUsersMetric').textContent = totalUsers;
+                document.getElementById('premiumUsersMetric').textContent = premiumUsers;
+                document.getElementById('trialUsersMetric').textContent = trialUsers;
+                document.getElementById('freeUsersMetric').textContent = freeUsers;
+                document.getElementById('recentSignupsMetric').textContent = recentSignups;
+
+                // Criar gráficos simples
+                createUserDistributionChart(premiumUsers, trialUsers, freeUsers);
+                createRevenueChart(monthlyRevenue);
+
+            } catch (error) {
+                console.error('Erro ao carregar analytics:', error);
+                showAlert('Erro ao carregar analytics', 'error');
+            }
+        }
+
+        // Criar gráfico de distribuição de usuários
+        function createUserDistributionChart(premium, trial, free) {
+            const total = premium + trial + free;
+            const premiumPercent = total > 0 ? (premium / total * 100).toFixed(1) : 0;
+            const trialPercent = total > 0 ? (trial / total * 100).toFixed(1) : 0;
+            const freePercent = total > 0 ? (free / total * 100).toFixed(1) : 0;
+
+            const chartContainer = document.getElementById('userDistributionChart');
+            chartContainer.innerHTML = `
+                <div style="display: flex; height: 100%; align-items: end; gap: 10px;">
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; height: ${premiumPercent}%; background: #38a169; border-radius: 4px 4px 0 0; min-height: 20px; display: flex; align-items: end; justify-content: center; color: white; font-weight: 600; font-size: 12px;">${premiumPercent}%</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #4a5568;">Premium</div>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; height: ${trialPercent}%; background: #3182ce; border-radius: 4px 4px 0 0; min-height: 20px; display: flex; align-items: end; justify-content: center; color: white; font-weight: 600; font-size: 12px;">${trialPercent}%</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #4a5568;">Trial</div>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 100%; height: ${freePercent}%; background: #e2e8f0; border-radius: 4px 4px 0 0; min-height: 20px; display: flex; align-items: end; justify-content: center; color: #4a5568; font-weight: 600; font-size: 12px;">${freePercent}%</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #4a5568;">Free</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Configurar interface baseada no nível de acesso
+        function configureInterfaceForUserLevel() {
+            const tabsContainer = document.querySelector('.tabs');
+            const adminTab = document.querySelector('.tab-btn[onclick*="admins"]');
+
+            if (!isCurrentUserSuperAdmin) {
+                // Esconder aba de administradores para admins regulares
+                if (adminTab) {
+                    adminTab.style.display = 'none';
+                }
+
+                // Se a aba atual for admins, mudar para usuários
+                const activeTab = document.querySelector('.tab-btn.active');
+                if (activeTab && activeTab.textContent.includes('Administradores')) {
+                    showTab('users');
+                }
+
+                // Mostrar aviso sobre permissões limitadas
+                setTimeout(() => {
+                    showAlert('Você tem acesso limitado. Apenas o Super Admin pode gerenciar administradores.', 'info');
+                }, 1000);
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticação
+            onAuthStateChanged(auth, (user) => {
+                if (user && isAdmin(user.email)) {
+                    currentUser = user;
+                    isCurrentUserSuperAdmin = isSuperAdmin(user.email);
+
+                    // Configurar interface baseada no nível de acesso
+                    configureInterfaceForUserLevel();
+
+                    loadUsers();
+                } else {
+                    // Redirecionar para login se não for admin
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // Configurar busca
+            document.getElementById('searchInput').addEventListener('input', searchUsers);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, initial-scale=1.0">
+    <title>Feature Graphic - Finans</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1024px;
+            height: 500px;
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #5e35b1 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Elementos decorativos de fundo */
+        .bg-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .bg-elements::before {
+            content: '💰 📊 ⭐ 🔄';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 48px;
+            transform: rotate(15deg);
+        }
+
+        .bg-elements::after {
+            content: '📱 💳 📈';
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            font-size: 36px;
+            transform: rotate(-10deg);
+        }
+
+        /* Conteúdo principal */
+        .content {
+            z-index: 2;
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 72px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+        }
+
+        .app-name {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Gradiente sutil no topo */
+        .top-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-elements"></div>
+    <div class="top-gradient"></div>
+
+    <div class="content">
+        <div class="logo">💰</div>
+        <div class="app-name">FINANS</div>
+        <div class="tagline">Controle Financeiro Inteligente</div>
+
+        <div class="features">
+            <div class="feature-item">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-text">IA</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⭐</div>
+                <div class="feature-text">Premium</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔄</div>
+                <div class="feature-text">Sync</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">📊</div>
+                <div class="feature-text">Relatórios</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instruções para conversão em imagem -->
+    <!--
+    Para converter este HTML em imagem PNG 1024x500:
+    1. Abra no navegador Chrome/Firefox
+    2. Pressione F12 para DevTools
+    3. Clique com botão direito no elemento <body>
+    4. "Capture node screenshot" ou similar
+    5. Salve como PNG
+    -->
+</body>
+</html>

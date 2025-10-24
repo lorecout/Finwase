@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 🔐 FUNÇÃO AUXILIAR - Verificar se usuário é admin
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email.lower() in [
+          'lorenalessa90@gmail.com',
+          'admin@finwise.com'
+        ];
+    }
+
+    // 👑 SUPER ADMIN - Apenas você pode modificar configurações do sistema
+    function isSuperAdmin() {
+      return request.auth != null &&
+        request.auth.token.email.lower() == 'lorenalessa90@gmail.com';
+    }
+
+    // 👑 CONFIGURAÇÕES DO SISTEMA - APENAS SUPER ADMIN
+    match /config/{configId} {
+      // Todos podem ler configurações públicas
+      allow read: if true;
+
+      // APENAS SUPER ADMIN pode modificar configurações
+      allow write: if isSuperAdmin();
+    }
+
+    // � USUÁRIOS - Regras básicas de segurança
+    match /users/{userId} {
+      // Permitir leitura para usuários autenticados OU PARA DESENVOLVIMENTO (temporário)
+      allow read: if request.auth != null || true; // TEMPORÁRIO: permitir leituras não autenticadas
+
+      // Permitir criação de conta própria
+      allow create: if request.auth != null &&
+        request.auth.uid == userId;
+
+      // Permitir atualização apenas para o próprio usuário OU admins
+      allow update: if request.auth != null && (
+        request.auth.uid == userId ||
+        isAdmin()
+      );
+
+      // NUNCA permitir delete de usuários
+      allow delete: if false;
+    }
+
+    // 📊 TRANSAÇÕES - Privadas por usuário
+    match /users/{userId}/transactions/{transactionId} {
+      // Apenas o dono pode ler/escrever suas transações
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+    }
+
+    // 📁 ARQUIVOS - Privados por usuário
+    match /users/{userId}/files/{fileId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid == userId;
+    }
+
+    // ⚙️ CONFIGURAÇÕES DO APP - Apenas leitura pública
+    match /app_config/{configId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 📈 ESTATÍSTICAS - Apenas admins podem ler
+    match /analytics/{analyticId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 🔒 LOGS DE ADMIN - Apenas admins
+    match /admin_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

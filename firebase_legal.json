@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "legal",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/privacy_policy.html"
+      }
+    ]
+  }
+}

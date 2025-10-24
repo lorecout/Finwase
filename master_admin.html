@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛠️ Gerenciador Master - FinWise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            color: #718096;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-button:hover {
+            background: rgba(102, 126, 234, 0.05);
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-main {
+            flex: 1;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .user-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-details-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-email-header {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+        }
+
+        .user-role-header {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.total {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .stat-card.active {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .stat-card.blocked {
+            background: linear-gradient(135deg, #f56565, #e53e3e);
+            color: white;
+        }
+
+        .stat-card.premium {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .controls-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 101, 101, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+        }
+
+        .users-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .user-card.blocked {
+            border-color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .user-info h3 {
+            color: #2d3748;
+            margin-bottom: 4px;
+            font-size: 1.1rem;
+        }
+
+        .user-email {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .user-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-blocked {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-premium {
+            background: #fef5e7;
+            color: #7c2d12;
+        }
+
+        .status-warning {
+            background: #fef5e7;
+            color: #7c2d12;
+        }
+
+        .user-search-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-search-item:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .user-search-info {
+            flex: 1;
+        }
+
+        .user-search-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .user-search-email {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .selected-user {
+            background: rgba(72, 187, 120, 0.1);
+            border: 2px solid #48bb78;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-details {
+            margin-bottom: 15px;
+        }
+
+        .user-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .user-detail-label {
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .user-detail-value {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            margin: 50px auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            color: #38a169;
+            border: 1px solid #9ae6b4;
+        }
+
+        .alert-error {
+            background: #fed7d7;
+            color: #e53e3e;
+            border: 1px solid #feb2b2;
+        }
+
+        .alert-info {
+            background: #ebf8ff;
+            color: #3182ce;
+            border: 1px solid #90cdf4;
+        }
+
+        .user-details-modal {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-details-modal h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .super-admins-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f8fafc;
+        }
+
+        .super-admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .super-admin-email {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .super-admin-master {
+            color: #ed8936;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .remove-admin-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-admin-btn:hover {
+            background: #e53e3e;
+        }
+
+        .remove-admin-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-main">
+                    <h1>🛠️ Gerenciador Master - FinWise</h1>
+                    <div class="subtitle">Controle total sobre todas as contas do sistema</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-warning" onclick="forceAdminLogin()" style="padding: 8px 16px; font-size: 12px;">🔧 Admin</button>
+                    <div class="user-info-header" id="userInfoHeader" style="display: none;">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-details-header">
+                            <div class="user-email-header" id="userEmailHeader">carregando...</div>
+                            <div class="user-role-header">Super Admin</div>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">Sair</button>
+                        <button class="btn btn-secondary" onclick="showSuperAdmins()" style="margin-left: 10px; padding: 8px 16px; font-size: 12px;">👥 Admins</button>
+                        <button class="btn btn-info" onclick="checkUserStatus()" style="margin-left: 10px; padding: 8px 16px; font-size: 12px;">🔍 Verificar Usuário</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abas de navegação -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('users')">👥 Usuários</button>
+            <button class="tab-button" onclick="switchTab('premium')">💎 Premium</button>
+            <button class="tab-button" onclick="switchTab('analytics')">📊 Analytics</button>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Conteúdo da aba Usuários -->
+        <div id="users-tab" class="tab-content active">
+
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <h3>Usuários Totais</h3>
+                <div class="value" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card active">
+                <h3>Contas Ativas</h3>
+                <div class="value" id="activeUsers">0</div>
+            </div>
+            <div class="stat-card blocked">
+                <h3>Contas Bloqueadas</h3>
+                <div class="value" id="blockedUsers">0</div>
+            </div>
+            <div class="stat-card premium">
+                <h3>Usuários Premium</h3>
+                <div class="value" id="premiumUsers">0</div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="search-controls">
+                <div class="control-group">
+                    <label for="searchInput">🔍 Buscar usuário</label>
+                    <input type="text" class="search-bar" id="searchInput" placeholder="Nome, email ou UID...">
+                </div>
+                <div class="control-group">
+                    <label for="statusFilter">📊 Status</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">Todos</option>
+                        <option value="active">Ativos</option>
+                        <option value="blocked">Bloqueados</option>
+                        <option value="premium">Premium</option>
+                        <option value="admin">Admins</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sortBy">🔄 Ordenar por</label>
+                    <select class="filter-select" id="sortBy">
+                        <option value="createdAt">Data de cadastro</option>
+                        <option value="displayName">Nome</option>
+                        <option value="email">Email</option>
+                        <option value="lastLogin">Último acesso</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sortOrder">📈 Ordem</label>
+                    <select class="filter-select" id="sortOrder">
+                        <option value="desc">Decrescente</option>
+                        <option value="asc">Crescente</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="refreshUsers()">
+                    🔄 Atualizar
+                </button>
+            </div>
+        </div>
+
+        <div class="users-section">
+            <div class="section-header">
+                <h2 class="section-title">👥 Gerenciamento de Contas</h2>
+                <div>
+                    <button class="btn btn-success" onclick="showBulkActions()">
+                        ⚡ Ações em Massa
+                    </button>
+                </div>
+            </div>
+
+            <div class="users-grid" id="usersGrid">
+                <div class="loading" style="display: block; margin: 50px auto;"></div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Conteúdo da aba Premium -->
+        <div id="premium-tab" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card premium">
+                    <h3>Usuários Premium Ativos</h3>
+                    <div class="value" id="activePremiumUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Premium Expirando (7 dias)</h3>
+                    <div class="value" id="expiringPremiumUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Premium Expirado</h3>
+                    <div class="value" id="expiredPremiumUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Receita Mensal Estimada</h3>
+                    <div class="value" id="monthlyRevenue">R$ 0</div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <div class="search-controls">
+                    <div class="control-group">
+                        <label for="premiumSearchInput">🔍 Buscar usuário premium</label>
+                        <input type="text" class="search-bar" id="premiumSearchInput" placeholder="Nome, email ou UID...">
+                    </div>
+                    <div class="control-group">
+                        <label for="premiumStatusFilter">📊 Status Premium</label>
+                        <select class="filter-select" id="premiumStatusFilter">
+                            <option value="all">Todos</option>
+                            <option value="active">Ativo</option>
+                            <option value="expiring">Expirando (7 dias)</option>
+                            <option value="expired">Expirado</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="premiumSortBy">🔄 Ordenar por</label>
+                        <select class="filter-select" id="premiumSortBy">
+                            <option value="expiryDate">Data de expiração</option>
+                            <option value="displayName">Nome</option>
+                            <option value="email">Email</option>
+                            <option value="createdAt">Data de concessão</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="refreshPremiumUsers()">
+                        🔄 Atualizar
+                    </button>
+                </div>
+            </div>
+
+            <div class="users-section">
+                <div class="section-header">
+                    <h2 class="section-title">💎 Gerenciamento de Premium</h2>
+                    <div>
+                        <button class="btn btn-success" onclick="showGrantPremiumModal()">
+                            ➕ Conceder Premium
+                        </button>
+                        <button class="btn btn-warning" onclick="showBulkPremiumModal()">
+                            ⚡ Ações Premium em Massa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="users-grid" id="premiumUsersGrid">
+                    <div class="loading" style="display: block; margin: 50px auto;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo da aba Analytics -->
+        <div id="analytics-tab" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Crescimento de Usuários</h3>
+                    <div class="value" id="userGrowth">+0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Conversão Premium</h3>
+                    <div class="value" id="premiumConversion">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Retenção Premium</h3>
+                    <div class="value" id="premiumRetention">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Receita Total</h3>
+                    <div class="value" id="totalRevenue">R$ 0</div>
+                </div>
+            </div>
+
+            <div class="users-section">
+                <div class="section-header">
+                    <h2 class="section-title">📊 Analytics e Relatórios</h2>
+                </div>
+                <div style="text-align: center; padding: 40px; color: #718096;">
+                    <p>Funcionalidades de analytics serão implementadas em breve...</p>
+                </div>
+            </div>
+        </div>
+
+    <!-- Modal de Gerenciar Super Admins -->
+    <div id="superAdminsModal" class="modal">
+        <div class="modal-content">
+            <h2>👥 Gerenciar Super Administradores</h2>
+
+            <div class="form-group">
+                <label>Super Administradores Atuais:</label>
+                <div id="superAdminsList" class="super-admins-list">
+                    <!-- Lista será preenchida dinamicamente -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adicionar Novo Super Admin:</label>
+                <input type="email" id="newSuperAdminEmail" placeholder="Digite o email..." class="search-bar">
+                <button class="btn btn-success" onclick="addNewSuperAdmin()" style="margin-top: 10px;">➕ Adicionar</button>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Usuário -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <h2 id="userModalTitle">Detalhes do Usuário</h2>
+
+            <div id="userDetailsContent">
+                <!-- Conteúdo será preenchido dinamicamente -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Fechar</button>
+                <button class="btn btn-primary" id="saveUserChanges" onclick="saveUserChanges()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ações em Massa -->
+    <div id="bulkModal" class="modal">
+        <div class="modal-content">
+            <h2>Ações em Massa</h2>
+
+            <div class="form-group">
+                <label>Selecionar usuários por filtro:</label>
+                <select id="bulkFilter" class="filter-select">
+                    <option value="all">Todos os usuários</option>
+                    <option value="active">Apenas ativos</option>
+                    <option value="blocked">Apenas bloqueados</option>
+                    <option value="premium">Apenas premium</option>
+                    <option value="nonpremium">Apenas não premium</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Ação a executar:</label>
+                <select id="bulkAction" class="filter-select">
+                    <option value="block">Bloquear contas</option>
+                    <option value="unblock">Desbloquear contas</option>
+                    <option value="grant_premium">Conceder premium (30 dias)</option>
+                    <option value="remove_premium">Remover premium</option>
+                    <option value="delete">EXCLUIR CONTAS (PERIGO!)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Motivo da ação:</label>
+                <textarea id="bulkReason" placeholder="Ex: Manutenção do sistema, violação de termos, etc." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-danger" id="executeBulkAction" onclick="executeBulkAction()">EXECUTAR AÇÃO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Conceder Premium -->
+    <div id="grantPremiumModal" class="modal">
+        <div class="modal-content">
+            <h2>💎 Conceder Premium</h2>
+
+            <div class="form-group">
+                <label>Buscar Usuário:</label>
+                <input type="text" id="grantPremiumSearch" placeholder="Digite nome ou email..." class="search-bar">
+                <div id="grantPremiumUserList" style="max-height: 200px; overflow-y: auto; border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px; margin-top: 10px; background: #f8fafc;">
+                    <!-- Lista de usuários será preenchida dinamicamente -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Duração do Premium:</label>
+                <select id="premiumDuration" class="filter-select">
+                    <option value="30">30 dias - R$ 9,90</option>
+                    <option value="90">90 dias - R$ 24,90</option>
+                    <option value="180">180 dias - R$ 44,90</option>
+                    <option value="365">365 dias - R$ 79,90</option>
+                    <option value="custom">Personalizado</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="customDaysGroup" style="display: none;">
+                <label>Dias Personalizados:</label>
+                <input type="number" id="customPremiumDays" value="30" min="1" max="365" class="search-bar">
+            </div>
+
+            <div class="form-group">
+                <label>Motivo da concessão:</label>
+                <textarea id="grantPremiumReason" placeholder="Ex: Compra no app, teste gratuito, recompensa, etc." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-success" id="grantPremiumBtn" onclick="grantPremiumToUser()">💎 Conceder Premium</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Ações Premium em Massa -->
+    <div id="bulkPremiumModal" class="modal">
+        <div class="modal-content">
+            <h2>⚡ Ações Premium em Massa</h2>
+
+            <div class="form-group">
+                <label>Selecionar usuários:</label>
+                <select id="bulkPremiumFilter" class="filter-select">
+                    <option value="all">Todos os usuários</option>
+                    <option value="nonpremium">Apenas não premium</option>
+                    <option value="expiring">Premium expirando (7 dias)</option>
+                    <option value="expired">Premium expirado</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Ação:</label>
+                <select id="bulkPremiumAction" class="filter-select">
+                    <option value="grant">Conceder premium (30 dias)</option>
+                    <option value="extend">Extender premium (+30 dias)</option>
+                    <option value="renew">Renovar premium (30 dias)</option>
+                    <option value="remove">Remover premium</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Motivo da ação:</label>
+                <textarea id="bulkPremiumReason" placeholder="Ex: Promoção especial, manutenção, etc." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-warning" id="executeBulkPremiumAction" onclick="executeBulkPremiumAction()">⚡ Executar Ação</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            getDocs,
+            doc,
+            getDoc,
+            updateDoc,
+            deleteDoc,
+            serverTimestamp,
+            query,
+            where,
+            orderBy,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnvXfbmMdlKXw7tS-IjzsW8fSzDZOf5wk",
+            authDomain: "finans-app-c740d.firebaseapp.com",
+            projectId: "finans-app-c740d",
+            storageBucket: "finans-app-c740d.firebasestorage.app",
+            messagingSenderId: "451126137935",
+            appId: "1:451126137935:web:genkg59foapmuiujj56os3qgmog189vc"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Estado da aplicação
+        let currentUser = null;
+        let allUsers = [];
+        let filteredUsers = [];
+        let selectedUser = null;
+
+        // Verificar se é SUPER ADMIN (lista dinâmica de emails autorizados)
+        function isSuperAdmin(email) {
+            const superAdmins = JSON.parse(localStorage.getItem('superAdmins') || '[]');
+
+            // Sempre incluir o admin master original
+            if (!superAdmins.includes('lorenalessa90@gmail.com')) {
+                superAdmins.push('lorenalessa90@gmail.com');
+                localStorage.setItem('superAdmins', JSON.stringify(superAdmins));
+            }
+
+            return superAdmins.includes(email?.toLowerCase());
+        }
+
+        // Adicionar novo super admin automaticamente
+        function addSuperAdmin(email) {
+            const superAdmins = JSON.parse(localStorage.getItem('superAdmins') || '[]');
+            const normalizedEmail = email?.toLowerCase();
+
+            if (normalizedEmail && !superAdmins.includes(normalizedEmail)) {
+                superAdmins.push(normalizedEmail);
+                localStorage.setItem('superAdmins', JSON.stringify(superAdmins));
+                console.log(`Novo super admin adicionado: ${normalizedEmail}`);
+                return true;
+            }
+            return false;
+        }
+
+        // Mostrar informações do usuário logado
+        function updateUserInfo(user) {
+            const userInfoHeader = document.getElementById('userInfoHeader');
+            const userAvatar = document.getElementById('userAvatar');
+            const userEmailHeader = document.getElementById('userEmailHeader');
+
+            if (user) {
+                userEmailHeader.textContent = user.email;
+                userAvatar.textContent = user.email.charAt(0).toUpperCase();
+                userInfoHeader.style.display = 'flex';
+            } else {
+                userInfoHeader.style.display = 'none';
+            }
+        }
+
+        // Função para mostrar alertas na interface
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: inherit; cursor: pointer; font-size: 16px;">×</button>
+            `;
+            alertContainer.appendChild(alertDiv);
+
+            // Auto-remover após 5 segundos
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        // Mostrar modal de super admins
+        window.showSuperAdmins = function() {
+            updateSuperAdminsList();
+            document.getElementById('superAdminsModal').style.display = 'block';
+        };
+
+        // Atualizar lista de super admins
+        function updateSuperAdminsList() {
+            const superAdmins = JSON.parse(localStorage.getItem('superAdmins') || '[]');
+            const listContainer = document.getElementById('superAdminsList');
+
+            if (superAdmins.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #a0aec0;">Nenhum super admin encontrado</p>';
+                return;
+            }
+
+            listContainer.innerHTML = superAdmins.map(email => `
+                <div class="super-admin-item">
+                    <div>
+                        <span class="super-admin-email">${email}</span>
+                        ${email === 'lorenalessa90@gmail.com' ? '<span class="super-admin-master">(MASTER)</span>' : ''}
+                    </div>
+                    <button class="remove-admin-btn"
+                            onclick="removeSuperAdmin('${email}')"
+                            ${email === 'lorenalessa90@gmail.com' ? 'disabled' : ''}>
+                        ❌ Remover
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Adicionar novo super admin
+        window.addNewSuperAdmin = function() {
+            const email = document.getElementById('newSuperAdminEmail').value.trim();
+            if (!email) {
+                showAlert('Digite um email válido', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showAlert('Email inválido', 'error');
+                return;
+            }
+
+            const wasAdded = addSuperAdmin(email);
+            if (wasAdded) {
+                showAlert(`Super admin adicionado: ${email}`, 'success');
+                document.getElementById('newSuperAdminEmail').value = '';
+                updateSuperAdminsList();
+            } else {
+                showAlert('Este email já é super admin', 'info');
+            }
+        };
+
+        // Remover super admin
+        window.removeSuperAdmin = function(email) {
+            if (email === 'lorenalessa90@gmail.com') {
+                showAlert('Não é possível remover o admin master', 'error');
+                return;
+            }
+
+            if (!confirm(`Remover ${email} da lista de super admins?`)) {
+                return;
+            }
+
+            const superAdmins = JSON.parse(localStorage.getItem('superAdmins') || '[]');
+            const filteredAdmins = superAdmins.filter(admin => admin !== email);
+
+            localStorage.setItem('superAdmins', JSON.stringify(filteredAdmins));
+            showAlert(`Super admin removido: ${email}`, 'success');
+            updateSuperAdminsList();
+        };
+
+        // Logout
+        window.logout = function() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                currentUser = null;
+                updateUserInfo(null);
+                showAlert('Logout realizado', 'info');
+            }
+        };
+
+        // Função de emergência para forçar login como admin (para desenvolvimento)
+        window.forceAdminLogin = function() {
+            const email = prompt('Digite o email do admin:', 'lorenaslcout@gmail.com');
+            if (!email) return;
+
+            const mockUser = {
+                uid: 'forced-admin-' + Date.now(),
+                email: email,
+                displayName: email.split('@')[0]
+            };
+
+            currentUser = mockUser;
+            updateUserInfo(mockUser);
+            loadUsers();
+            showAlert(`🔧 LOGIN FORÇADO: Bem-vindo, ${email}!`, 'success');
+        };
+
+        // Função para verificar status específico de usuário
+        window.checkUserStatus = async function() {
+            const email = prompt('Digite o email do usuário para verificar:', 'lorenaslcout@gmail.com');
+            if (!email) return;
+
+            try {
+                showAlert('🔍 Procurando usuário...', 'info');
+
+                // Buscar usuário por email
+                const q = query(collection(db, 'users'), where('email', '==', email.toLowerCase()));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    showAlert(`❌ Usuário com email ${email} não encontrado no Firestore`, 'error');
+
+                    // Verificar se existe no Firebase Auth (através de uma busca mais ampla)
+                    showAlert('🔍 Verificando se existe em outras contas...', 'info');
+                    const allUsersQuery = query(collection(db, 'users'));
+                    const allUsersSnapshot = await getDocs(allUsersQuery);
+
+                    let foundSimilar = false;
+                    allUsersSnapshot.forEach((doc) => {
+                        const userData = doc.data();
+                        if (userData.email && userData.email.toLowerCase().includes(email.toLowerCase().split('@')[0])) {
+                            showAlert(`💡 Encontrado usuário similar: ${userData.email} (UID: ${doc.id})`, 'info');
+                            foundSimilar = true;
+                        }
+                    });
+
+                    if (!foundSimilar) {
+                        showAlert('❌ Nenhum usuário similar encontrado no sistema', 'error');
+                    }
+
+                    return;
+                }
+
+                const userDoc = querySnapshot.docs[0];
+                const userData = userDoc.data();
+
+                const createdAt = new Date(userData.createdAt.seconds * 1000);
+                const lastLogin = userData.lastLogin ? new Date(userData.lastLogin.seconds * 1000) : null;
+                const now = new Date();
+
+                let premiumStatus = '❌ NÃO PREMIUM';
+                let expiryInfo = 'N/A';
+
+                if (userData.isPremium) {
+                    if (userData.premiumExpiryDate) {
+                        const expiry = new Date(userData.premiumExpiryDate.seconds * 1000);
+                        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+
+                        if (expiry <= now) {
+                            premiumStatus = '❌ PREMIUM EXPIRADO';
+                            expiryInfo = `Expirou em ${expiry.toLocaleDateString('pt-BR')}`;
+                        } else {
+                            premiumStatus = '✅ PREMIUM ATIVO';
+                            expiryInfo = `Expira em ${expiry.toLocaleDateString('pt-BR')} (${daysLeft} dias restantes)`;
+                        }
+                    } else {
+                        premiumStatus = '✅ PREMIUM ATIVO (sem data de expiração)';
+                        expiryInfo = 'Nunca expira';
+                    }
+                }
+
+                const message = `
+👤 USUÁRIO: ${userData.displayName || 'Nome não informado'}
+📧 EMAIL: ${userData.email}
+🆔 UID: ${userDoc.id}
+📅 CRIADO EM: ${createdAt.toLocaleDateString('pt-BR')}
+🔑 ÚLTIMO LOGIN: ${lastLogin ? lastLogin.toLocaleDateString('pt-BR') : 'Nunca'}
+💎 STATUS PREMIUM: ${premiumStatus}
+📆 EXPIRAÇÃO: ${expiryInfo}
+🔄 PLANO ATUAL: ${userData.currentPlan || 'free'}
+🚫 BLOQUEADO: ${userData.isBlocked ? 'SIM' : 'NÃO'}
+👑 ADMIN: ${userData.isAdmin ? 'SIM' : 'NÃO'}
+                `;
+
+                alert(message);
+
+            } catch (error) {
+                console.error('Erro ao verificar usuário:', error);
+                showAlert('Erro ao verificar usuário: ' + error.message, 'error');
+            }
+        };
+        async function loadUsers() {
+            try {
+                const usersGrid = document.getElementById('usersGrid');
+                usersGrid.innerHTML = '<div class="loading" style="display: block; margin: 50px auto;"></div>';
+
+                const querySnapshot = await getDocs(collection(db, 'users'));
+                allUsers = [];
+
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    allUsers.push({
+                        id: doc.id,
+                        ...userData,
+                        // Adicionar campos calculados
+                        isBlocked: userData.isBlocked || false,
+                        isPremium: userData.isPremium || false,
+                        isAdmin: userData.isAdmin || false,
+                        createdAt: userData.createdAt || { seconds: 0 },
+                        lastLogin: userData.lastLogin || null
+                    });
+                });
+
+                applyFilters();
+                updateStats();
+
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                showAlert('Erro ao carregar usuários: ' + error.message, 'error');
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const totalUsers = allUsers.length;
+            const activeUsers = allUsers.filter(u => !u.isBlocked).length;
+            const blockedUsers = allUsers.filter(u => u.isBlocked).length;
+            const premiumUsers = allUsers.filter(u => u.isPremium).length;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('activeUsers').textContent = activeUsers;
+            document.getElementById('blockedUsers').textContent = blockedUsers;
+            document.getElementById('premiumUsers').textContent = premiumUsers;
+        }
+
+        // Aplicar filtros e ordenação
+        function applyFilters() {
+            let filtered = [...allUsers];
+
+            // Filtro de status
+            const statusFilter = document.getElementById('statusFilter').value;
+            if (statusFilter !== 'all') {
+                switch (statusFilter) {
+                    case 'active':
+                        filtered = filtered.filter(u => !u.isBlocked);
+                        break;
+                    case 'blocked':
+                        filtered = filtered.filter(u => u.isBlocked);
+                        break;
+                    case 'premium':
+                        filtered = filtered.filter(u => u.isPremium);
+                        break;
+                    case 'admin':
+                        filtered = filtered.filter(u => u.isAdmin);
+                        break;
+                }
+            }
+
+            // Busca por texto
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(user =>
+                    (user.displayName || '').toLowerCase().includes(searchTerm) ||
+                    (user.email || '').toLowerCase().includes(searchTerm) ||
+                    (user.id || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Ordenação
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            filtered.sort((a, b) => {
+                let aValue, bValue;
+
+                switch (sortBy) {
+                    case 'displayName':
+                        aValue = (a.displayName || '').toLowerCase();
+                        bValue = (b.displayName || '').toLowerCase();
+                        break;
+                    case 'email':
+                        aValue = (a.email || '').toLowerCase();
+                        bValue = (b.email || '').toLowerCase();
+                        break;
+                    case 'lastLogin':
+                        aValue = a.lastLogin ? new Date(a.lastLogin.seconds * 1000) : new Date(0);
+                        bValue = b.lastLogin ? new Date(b.lastLogin.seconds * 1000) : new Date(0);
+                        break;
+                    case 'createdAt':
+                    default:
+                        aValue = new Date(a.createdAt.seconds * 1000);
+                        bValue = new Date(b.createdAt.seconds * 1000);
+                        break;
+                }
+
+                if (sortOrder === 'asc') {
+                    return aValue > bValue ? 1 : -1;
+                } else {
+                    return aValue < bValue ? 1 : -1;
+                }
+            });
+
+            filteredUsers = filtered;
+            renderUsers(filteredUsers);
+        }
+
+        // Renderizar lista de usuários
+        function renderUsers(users) {
+            const usersGrid = document.getElementById('usersGrid');
+
+            if (users.length === 0) {
+                usersGrid.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 40px; grid-column: 1 / -1;">Nenhum usuário encontrado</p>';
+                return;
+            }
+
+            usersGrid.innerHTML = users.map(user => {
+                const statusClass = user.isBlocked ? 'blocked' : '';
+                const statusText = user.isBlocked ? 'Bloqueado' : 'Ativo';
+                const statusClassName = user.isBlocked ? 'status-blocked' : 'status-active';
+
+                let roleText = 'Usuário';
+                let roleClass = 'status-active';
+
+                if (user.isAdmin) {
+                    roleText = 'Admin';
+                    roleClass = 'status-admin';
+                } else if (user.isPremium) {
+                    roleText = 'Premium';
+                    roleClass = 'status-premium';
+                }
+
+                const createdAt = new Date(user.createdAt.seconds * 1000).toLocaleDateString('pt-BR');
+                const lastLogin = user.lastLogin ?
+                    new Date(user.lastLogin.seconds * 1000).toLocaleDateString('pt-BR') : 'Nunca';
+
+                return `
+                    <div class="user-card ${statusClass}" onclick="showUserDetails('${user.id}')">
+                        <div class="user-header">
+                            <div class="user-info">
+                                <h3>${user.displayName || 'Nome não informado'}</h3>
+                                <div class="user-email">${user.email || 'Email não informado'}</div>
+                            </div>
+                            <span class="user-status ${statusClassName}">${statusText}</span>
+                        </div>
+
+                        <div class="user-details">
+                            <div class="user-detail">
+                                <span class="user-detail-label">Função:</span>
+                                <span class="user-detail-value ${roleClass}">${roleText}</span>
+                            </div>
+                            <div class="user-detail">
+                                <span class="user-detail-label">Criado em:</span>
+                                <span class="user-detail-value">${createdAt}</span>
+                            </div>
+                            <div class="user-detail">
+                                <span class="user-detail-label">Último acesso:</span>
+                                <span class="user-detail-value">${lastLogin}</span>
+                            </div>
+                        </div>
+
+                        <div class="user-actions">
+                            ${user.isBlocked ?
+                                '<button class="btn-small btn-success" onclick="event.stopPropagation(); toggleUserBlock(\'' + user.id + '\', false)">🔓 Desbloquear</button>' :
+                                '<button class="btn-small btn-warning" onclick="event.stopPropagation(); toggleUserBlock(\'' + user.id + '\', true)">🔒 Bloquear</button>'
+                            }
+                            ${user.isPremium ?
+                                '<button class="btn-small btn-danger" onclick="event.stopPropagation(); togglePremium(\'' + user.id + '\', false)">💰 Remover Premium</button>' :
+                                '<button class="btn-small btn-success" onclick="event.stopPropagation(); togglePremium(\'' + user.id + '\', true)">💎 Conceder Premium</button>'
+                            }
+                            <button class="btn-small btn-danger" onclick="event.stopPropagation(); deleteUser('${user.id}')">🗑️ Excluir</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mostrar detalhes do usuário
+        window.showUserDetails = async function(userId) {
+            selectedUser = allUsers.find(u => u.id === userId);
+            if (!selectedUser) return;
+
+            const modal = document.getElementById('userModal');
+            const title = document.getElementById('userModalTitle');
+            const content = document.getElementById('userDetailsContent');
+
+            title.textContent = `Detalhes: ${selectedUser.displayName || selectedUser.email}`;
+
+            const createdAt = new Date(selectedUser.createdAt.seconds * 1000);
+            const lastLogin = selectedUser.lastLogin ?
+                new Date(selectedUser.lastLogin.seconds * 1000) : null;
+
+            content.innerHTML = `
+                <div class="user-details-modal">
+                    <h3>Informações Básicas</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Nome</div>
+                            <div class="detail-value">${selectedUser.displayName || 'Não informado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">${selectedUser.email || 'Não informado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">UID</div>
+                            <div class="detail-value">${selectedUser.id}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">${selectedUser.isBlocked ? 'Bloqueado' : 'Ativo'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Função</div>
+                            <div class="detail-value">
+                                ${selectedUser.isAdmin ? 'Administrador' :
+                                  selectedUser.isPremium ? 'Usuário Premium' : 'Usuário Comum'}
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Data de Cadastro</div>
+                            <div class="detail-value">${createdAt.toLocaleDateString('pt-BR')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Último Acesso</div>
+                            <div class="detail-value">${lastLogin ? lastLogin.toLocaleDateString('pt-BR') : 'Nunca'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Plano Atual</div>
+                            <div class="detail-value">${selectedUser.currentPlan || 'Free'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Alterar Status da Conta:</label>
+                    <select id="userStatus" class="filter-select">
+                        <option value="active" ${!selectedUser.isBlocked ? 'selected' : ''}>Ativa</option>
+                        <option value="blocked" ${selectedUser.isBlocked ? 'selected' : ''}>Bloqueada</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Alterar Privilégios:</label>
+                    <select id="userRole" class="filter-select">
+                        <option value="user" ${!selectedUser.isAdmin && !selectedUser.isPremium ? 'selected' : ''}>Usuário Comum</option>
+                        <option value="premium" ${selectedUser.isPremium && !selectedUser.isAdmin ? 'selected' : ''}>Usuário Premium</option>
+                        <option value="admin" ${selectedUser.isAdmin ? 'selected' : ''}>Administrador</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Dias de Premium (se aplicável):</label>
+                    <input type="number" id="premiumDays" value="30" min="1" max="365">
+                </div>
+
+                <div class="form-group">
+                    <label>Motivo da alteração:</label>
+                    <textarea id="changeReason" placeholder="Ex: Revisão de conta, solicitação do usuário, etc." required></textarea>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        };
+
+        // Salvar alterações do usuário
+        window.saveUserChanges = async function() {
+            if (!selectedUser) return;
+
+            const status = document.getElementById('userStatus').value;
+            const role = document.getElementById('userRole').value;
+            const premiumDays = parseInt(document.getElementById('premiumDays').value) || 30;
+            const reason = document.getElementById('changeReason').value;
+
+            if (!reason.trim()) {
+                showAlert('Motivo da alteração é obrigatório', 'error');
+                return;
+            }
+
+            try {
+                const updateData = {
+                    isBlocked: status === 'blocked',
+                    isAdmin: role === 'admin',
+                    isPremium: role === 'premium' || role === 'admin',
+                    currentPlan: role === 'admin' ? 'admin' : (role === 'premium' ? 'premium' : 'free'),
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: reason,
+                    updatedAt: serverTimestamp(),
+                };
+
+                // Se concedendo premium, definir data de expiração
+                if (role === 'premium' && !selectedUser.isPremium) {
+                    const expiryDate = new Date();
+                    expiryDate.setDate(expiryDate.getDate() + premiumDays);
+                    updateData.premiumExpiryDate = expiryDate;
+                }
+
+                await updateDoc(doc(db, 'users', selectedUser.id), updateData);
+
+                showAlert('Alterações salvas com sucesso!');
+                closeModal();
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao salvar alterações:', error);
+                showAlert('Erro ao salvar alterações: ' + error.message, 'error');
+            }
+        };
+
+        // Alternar bloqueio de usuário
+        window.toggleUserBlock = async function(userId, block) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const action = block ? 'bloquear' : 'desbloquear';
+            if (!confirm(`Tem certeza que deseja ${action} a conta de ${user.displayName || user.email}?`)) {
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, 'users', userId), {
+                    isBlocked: block,
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: `Conta ${block ? 'bloqueada' : 'desbloqueada'} por admin`,
+                    updatedAt: serverTimestamp(),
+                });
+
+                showAlert(`Conta ${block ? 'bloqueada' : 'desbloqueada'} com sucesso!`);
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao alterar status:', error);
+                showAlert('Erro ao alterar status: ' + error.message, 'error');
+            }
+        };
+
+        // Alternar status premium
+        window.togglePremium = async function(userId, grant) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const action = grant ? 'conceder premium' : 'remover premium';
+            if (!confirm(`Tem certeza que deseja ${action} para ${user.displayName || user.email}?`)) {
+                return;
+            }
+
+            try {
+                const updateData = {
+                    isPremium: grant,
+                    currentPlan: grant ? 'premium' : 'free',
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: `Premium ${grant ? 'concedido' : 'removido'} por admin`,
+                    updatedAt: serverTimestamp(),
+                };
+
+                if (grant) {
+                    const expiryDate = new Date();
+                    expiryDate.setDate(expiryDate.getDate() + 30); // 30 dias
+                    updateData.premiumExpiryDate = expiryDate;
+                } else {
+                    updateData.premiumExpiryDate = null;
+                }
+
+                await updateDoc(doc(db, 'users', userId), updateData);
+
+                showAlert(`Premium ${grant ? 'concedido' : 'removido'} com sucesso!`);
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao alterar premium:', error);
+                showAlert('Erro ao alterar premium: ' + error.message, 'error');
+            }
+        };
+
+        // Excluir usuário
+        window.deleteUser = async function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const confirmText = `EXCLUIR CONTA\n\nUsuário: ${user.displayName || user.email}\nEmail: ${user.email}\n\nEsta ação é IRREVERSÍVEL!\n\nDigite "EXCLUIR" para confirmar:`;
+
+            const confirmation = prompt(confirmText);
+            if (confirmation !== 'EXCLUIR') {
+                showAlert('Exclusão cancelada', 'info');
+                return;
+            }
+
+            try {
+                // Excluir dados do usuário
+                await deleteDoc(doc(db, 'users', userId));
+
+                // Tentar excluir subcoleções (se existirem)
+                try {
+                    const transactionsSnapshot = await getDocs(collection(db, 'users', userId, 'transactions'));
+                    transactionsSnapshot.forEach(async (doc) => {
+                        await deleteDoc(doc.ref);
+                    });
+                } catch (e) {
+                    console.log('Nenhuma transação para excluir');
+                }
+
+                showAlert('Conta excluída permanentemente!', 'error');
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro ao excluir usuário:', error);
+                showAlert('Erro ao excluir usuário: ' + error.message, 'error');
+            }
+        };
+
+        // Mostrar modal de ações em massa
+        window.showBulkActions = function() {
+            document.getElementById('bulkModal').style.display = 'block';
+        };
+
+        // Executar ação em massa
+        window.executeBulkAction = async function() {
+            const filter = document.getElementById('bulkFilter').value;
+            const action = document.getElementById('bulkAction').value;
+            const reason = document.getElementById('bulkReason').value;
+
+            if (!reason.trim()) {
+                showAlert('Motivo da ação é obrigatório', 'error');
+                return;
+            }
+
+            // Filtrar usuários
+            let targetUsers = [...allUsers];
+            switch (filter) {
+                case 'active':
+                    targetUsers = targetUsers.filter(u => !u.isBlocked);
+                    break;
+                case 'blocked':
+                    targetUsers = targetUsers.filter(u => u.isBlocked);
+                    break;
+                case 'premium':
+                    targetUsers = targetUsers.filter(u => u.isPremium);
+                    break;
+                case 'nonpremium':
+                    targetUsers = targetUsers.filter(u => !u.isPremium);
+                    break;
+            }
+
+            if (targetUsers.length === 0) {
+                showAlert('Nenhum usuário encontrado para a ação selecionada', 'error');
+                return;
+            }
+
+            const confirmText = `EXECUTAR AÇÃO EM MASSA\n\nAção: ${action}\nUsuários afetados: ${targetUsers.length}\n\nDigite "CONFIRMAR" para executar:`;
+
+            const confirmation = prompt(confirmText);
+            if (confirmation !== 'CONFIRMAR') {
+                showAlert('Ação em massa cancelada', 'info');
+                return;
+            }
+
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const user of targetUsers) {
+                    try {
+                        const updateData = {
+                            adminModifiedAt: serverTimestamp(),
+                            adminModifiedBy: currentUser.uid,
+                            adminModificationReason: reason,
+                            updatedAt: serverTimestamp(),
+                        };
+
+                        switch (action) {
+                            case 'block':
+                                updateData.isBlocked = true;
+                                break;
+                            case 'unblock':
+                                updateData.isBlocked = false;
+                                break;
+                            case 'grant_premium':
+                                updateData.isPremium = true;
+                                updateData.currentPlan = 'premium';
+                                const expiryDate = new Date();
+                                expiryDate.setDate(expiryDate.getDate() + 30);
+                                updateData.premiumExpiryDate = expiryDate;
+                                break;
+                            case 'remove_premium':
+                                updateData.isPremium = false;
+                                updateData.currentPlan = 'free';
+                                updateData.premiumExpiryDate = null;
+                                break;
+                            case 'delete':
+                                await deleteDoc(doc(db, 'users', user.id));
+                                continue; // Pular updateDoc
+                        }
+
+                        await updateDoc(doc(db, 'users', user.id), updateData);
+                        successCount++;
+
+                    } catch (error) {
+                        console.error(`Erro ao processar ${user.email}:`, error);
+                        errorCount++;
+                    }
+                }
+
+                closeModal();
+                showAlert(`Ação concluída: ${successCount} sucesso(s), ${errorCount} erro(s)`);
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erro na ação em massa:', error);
+                showAlert('Erro na ação em massa: ' + error.message, 'error');
+            }
+        };
+
+        // Fechar modal
+        window.closeModal = function() {
+            document.getElementById('userModal').style.display = 'none';
+            document.getElementById('bulkModal').style.display = 'none';
+            document.getElementById('superAdminsModal').style.display = 'none';
+            document.getElementById('grantPremiumModal').style.display = 'none';
+            document.getElementById('bulkPremiumModal').style.display = 'none';
+        };
+
+        // Trocar entre abas
+        window.switchTab = function(tabName) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar aba selecionada
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+
+            // Carregar dados específicos da aba
+            if (tabName === 'premium') {
+                loadPremiumUsers();
+            }
+        };
+
+        // Atualizar lista
+        window.refreshUsers = function() {
+            loadUsers();
+            showAlert('Lista atualizada com sucesso');
+        };
+
+        // Configurar event listeners
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('sortBy').addEventListener('change', applyFilters);
+        document.getElementById('sortOrder').addEventListener('change', applyFilters);
+
+        // Configurar event listeners para premium
+        document.getElementById('premiumSearchInput').addEventListener('input', applyPremiumFilters);
+        document.getElementById('premiumStatusFilter').addEventListener('change', applyPremiumFilters);
+        document.getElementById('premiumSortBy').addEventListener('change', applyPremiumFilters);
+
+        // Configurar event listener para duração personalizada
+        document.getElementById('premiumDuration').addEventListener('change', function() {
+            const customGroup = document.getElementById('customDaysGroup');
+            customGroup.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        // Configurar busca de usuários para concessão de premium
+        document.getElementById('grantPremiumSearch').addEventListener('input', searchUsersForPremium);
+
+        // ========== FUNÇÕES DE GERENCIAMENTO DE PREMIUM ==========
+
+        // Carregar usuários premium
+        async function loadPremiumUsers() {
+            try {
+                const grid = document.getElementById('premiumUsersGrid');
+                grid.innerHTML = '<div class="loading" style="display: block; margin: 50px auto;"></div>';
+
+                // Usar os mesmos dados de allUsers, mas filtrar apenas premium
+                const premiumUsers = allUsers.filter(u => u.isPremium || u.isAdmin);
+
+                applyPremiumFilters();
+                updatePremiumStats();
+
+            } catch (error) {
+                console.error('Erro ao carregar usuários premium:', error);
+                showAlert('Erro ao carregar usuários premium: ' + error.message, 'error');
+            }
+        }
+
+        // Atualizar estatísticas premium
+        function updatePremiumStats() {
+            const now = new Date();
+            const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            const premiumUsers = allUsers.filter(u => u.isPremium || u.isAdmin);
+            const activePremium = premiumUsers.filter(u => {
+                if (u.isAdmin) return true;
+                if (!u.premiumExpiryDate) return true;
+                const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                return expiry > now;
+            });
+
+            const expiringPremium = premiumUsers.filter(u => {
+                if (u.isAdmin || !u.premiumExpiryDate) return false;
+                const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                return expiry > now && expiry <= sevenDaysFromNow;
+            });
+
+            const expiredPremium = premiumUsers.filter(u => {
+                if (u.isAdmin || !u.premiumExpiryDate) return false;
+                const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                return expiry <= now;
+            });
+
+            // Calcular receita mensal estimada (R$ 9,90 por usuário premium ativo)
+            const monthlyRevenue = activePremium.length * 9.90;
+
+            document.getElementById('activePremiumUsers').textContent = activePremium.length;
+            document.getElementById('expiringPremiumUsers').textContent = expiringPremium.length;
+            document.getElementById('expiredPremiumUsers').textContent = expiredPremium.length;
+            document.getElementById('monthlyRevenue').textContent = `R$ ${monthlyRevenue.toFixed(2).replace('.', ',')}`;
+        }
+
+        // Aplicar filtros premium
+        function applyPremiumFilters() {
+            let filtered = allUsers.filter(u => u.isPremium || u.isAdmin);
+
+            // Filtro de status premium
+            const statusFilter = document.getElementById('premiumStatusFilter').value;
+            const now = new Date();
+            const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            if (statusFilter !== 'all') {
+                switch (statusFilter) {
+                    case 'active':
+                        filtered = filtered.filter(u => {
+                            if (u.isAdmin) return true;
+                            if (!u.premiumExpiryDate) return true;
+                            const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                            return expiry > now;
+                        });
+                        break;
+                    case 'expiring':
+                        filtered = filtered.filter(u => {
+                            if (u.isAdmin || !u.premiumExpiryDate) return false;
+                            const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                            return expiry > now && expiry <= sevenDaysFromNow;
+                        });
+                        break;
+                    case 'expired':
+                        filtered = filtered.filter(u => {
+                            if (u.isAdmin || !u.premiumExpiryDate) return false;
+                            const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                            return expiry <= now;
+                        });
+                        break;
+                }
+            }
+
+            // Busca por texto
+            const searchTerm = document.getElementById('premiumSearchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(user =>
+                    (user.displayName || '').toLowerCase().includes(searchTerm) ||
+                    (user.email || '').toLowerCase().includes(searchTerm) ||
+                    (user.id || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Ordenação
+            const sortBy = document.getElementById('premiumSortBy').value;
+
+            filtered.sort((a, b) => {
+                let aValue, bValue;
+
+                switch (sortBy) {
+                    case 'displayName':
+                        aValue = (a.displayName || '').toLowerCase();
+                        bValue = (b.displayName || '').toLowerCase();
+                        break;
+                    case 'email':
+                        aValue = (a.email || '').toLowerCase();
+                        bValue = (b.email || '').toLowerCase();
+                        break;
+                    case 'expiryDate':
+                    default:
+                        if (a.isAdmin && b.isAdmin) return 0;
+                        if (a.isAdmin) return -1;
+                        if (b.isAdmin) return 1;
+                        aValue = a.premiumExpiryDate ? new Date(a.premiumExpiryDate.seconds * 1000) : new Date(0);
+                        bValue = b.premiumExpiryDate ? new Date(b.premiumExpiryDate.seconds * 1000) : new Date(0);
+                        break;
+                }
+
+                return bValue - aValue; // Decrescente por padrão
+            });
+
+            renderPremiumUsers(filtered);
+        }
+
+        // Renderizar usuários premium
+        function renderPremiumUsers(users) {
+            const grid = document.getElementById('premiumUsersGrid');
+
+            if (users.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 40px; grid-column: 1 / -1;">Nenhum usuário premium encontrado</p>';
+                return;
+            }
+
+            const now = new Date();
+
+            grid.innerHTML = users.map(user => {
+                const isAdmin = user.isAdmin;
+                let statusText = 'Ativo';
+                let statusClass = 'status-premium';
+                let expiryInfo = '';
+
+                if (isAdmin) {
+                    statusText = 'Admin (Ilimitado)';
+                    statusClass = 'status-admin';
+                    expiryInfo = 'Nunca expira';
+                } else if (user.premiumExpiryDate) {
+                    const expiry = new Date(user.premiumExpiryDate.seconds * 1000);
+                    const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+
+                    if (expiry <= now) {
+                        statusText = 'Expirado';
+                        statusClass = 'status-blocked';
+                        expiryInfo = `Expirou em ${expiry.toLocaleDateString('pt-BR')}`;
+                    } else if (daysLeft <= 7) {
+                        statusText = 'Expirando';
+                        statusClass = 'status-warning';
+                        expiryInfo = `Expira em ${daysLeft} dia(s)`;
+                    } else {
+                        statusText = 'Ativo';
+                        statusClass = 'status-premium';
+                        expiryInfo = `Expira em ${expiry.toLocaleDateString('pt-BR')}`;
+                    }
+                } else {
+                    expiryInfo = 'Data não definida';
+                }
+
+                const createdAt = new Date(user.createdAt.seconds * 1000).toLocaleDateString('pt-BR');
+
+                return `
+                    <div class="user-card" onclick="showPremiumUserDetails('${user.id}')">
+                        <div class="user-header">
+                            <div class="user-info">
+                                <h3>${user.displayName || 'Nome não informado'}</h3>
+                                <div class="user-email">${user.email || 'Email não informado'}</div>
+                            </div>
+                            <span class="user-status ${statusClass}">${statusText}</span>
+                        </div>
+
+                        <div class="user-details">
+                            <div class="user-detail">
+                                <span class="user-detail-label">Status Premium:</span>
+                                <span class="user-detail-value ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="user-detail">
+                                <span class="user-detail-label">Expiração:</span>
+                                <span class="user-detail-value">${expiryInfo}</span>
+                            </div>
+                            <div class="user-detail">
+                                <span class="user-detail-label">Desde:</span>
+                                <span class="user-detail-value">${createdAt}</span>
+                            </div>
+                        </div>
+
+                        <div class="user-actions">
+                            <button class="btn-small btn-primary" onclick="event.stopPropagation(); extendPremium('${user.id}')">➕ Extender</button>
+                            <button class="btn-small btn-success" onclick="event.stopPropagation(); renewPremium('${user.id}')">🔄 Renovar</button>
+                            ${!isAdmin ? '<button class="btn-small btn-danger" onclick="event.stopPropagation(); removePremium(\'' + user.id + '\')">💰 Remover</button>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mostrar modal de concessão de premium
+        window.showGrantPremiumModal = function() {
+            document.getElementById('grantPremiumModal').style.display = 'block';
+            document.getElementById('grantPremiumSearch').focus();
+        };
+
+        // Buscar usuários para concessão de premium
+        window.searchUsersForPremium = function() {
+            const searchTerm = document.getElementById('grantPremiumSearch').value.toLowerCase();
+            const userList = document.getElementById('grantPremiumUserList');
+
+            if (!searchTerm.trim()) {
+                userList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Digite um nome ou email para buscar...</p>';
+                return;
+            }
+
+            // 🔧 CORREÇÃO: Permitir buscar TODOS os usuários (incluindo premium)
+            const matchingUsers = allUsers.filter(user =>
+                (user.displayName || '').toLowerCase().includes(searchTerm) ||
+                (user.email || '').toLowerCase().includes(searchTerm)
+            ).slice(0, 10); // Limitar a 10 resultados
+
+            if (matchingUsers.length === 0) {
+                userList.innerHTML = '<p style="color: #a0aec0; text-align: center;">Nenhum usuário encontrado</p>';
+                return;
+            }
+
+            userList.innerHTML = matchingUsers.map(user => {
+                const isAlreadyPremium = user.isPremium || user.isAdmin;
+                const statusText = isAlreadyPremium ? ' (Já é Premium)' : '';
+                const buttonClass = isAlreadyPremium ? 'btn-warning' : 'btn-success';
+                const buttonText = isAlreadyPremium ? 'Modificar' : 'Selecionar';
+
+                return `
+                    <div class="user-search-item" onclick="selectUserForPremium('${user.id}')">
+                        <div class="user-search-info">
+                            <div class="user-search-name">${user.displayName || 'Nome não informado'} ${statusText}</div>
+                            <div class="user-search-email">${user.email}</div>
+                        </div>
+                        <button class="btn-small ${buttonClass}">${buttonText}</button>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // Selecionar usuário para concessão de premium
+        let selectedUserForPremium = null;
+        window.selectUserForPremium = function(userId) {
+            console.log('🎯 DEBUG: Selecionando usuário com ID:', userId);
+
+            selectedUserForPremium = allUsers.find(u => u.id === userId);
+            if (!selectedUserForPremium) {
+                console.error('❌ DEBUG: Usuário não encontrado com ID:', userId);
+                showAlert('Erro: Usuário não encontrado', 'error');
+                return;
+            }
+
+            console.log('✅ DEBUG: Usuário selecionado:', selectedUserForPremium.email, 'ID:', selectedUserForPremium.id);
+
+            const userList = document.getElementById('grantPremiumUserList');
+            const isAlreadyPremium = selectedUserForPremium.isPremium || selectedUserForPremium.isAdmin;
+            const statusText = isAlreadyPremium ? ' (Modificar Premium)' : ' (Novo Premium)';
+
+            userList.innerHTML = `
+                <div class="selected-user">
+                    <div class="user-search-info">
+                        <div class="user-search-name">✅ ${selectedUserForPremium.displayName || 'Nome não informado'} ${statusText}</div>
+                        <div class="user-search-email">${selectedUserForPremium.email} (ID: ${selectedUserForPremium.id})</div>
+                    </div>
+                    <button class="btn-small btn-secondary" onclick="clearSelectedUser()">Alterar</button>
+                </div>
+            `;
+
+            document.getElementById('grantPremiumBtn').disabled = false;
+        };
+
+        // Limpar usuário selecionado
+        window.clearSelectedUser = function() {
+            selectedUserForPremium = null;
+            document.getElementById('grantPremiumSearch').value = '';
+            document.getElementById('grantPremiumUserList').innerHTML = '<p style="color: #a0aec0; text-align: center;">Digite um nome ou email para buscar...</p>';
+            document.getElementById('grantPremiumBtn').disabled = true;
+        };
+
+        // Conceder premium ao usuário selecionado
+        window.grantPremiumToUser = async function() {
+            if (!selectedUserForPremium) {
+                showAlert('Selecione um usuário primeiro', 'error');
+                return;
+            }
+
+            const duration = document.getElementById('premiumDuration').value;
+            let days = parseInt(duration);
+
+            if (duration === 'custom') {
+                days = parseInt(document.getElementById('customPremiumDays').value) || 30;
+            }
+
+            const reason = document.getElementById('grantPremiumReason').value;
+
+            if (!reason.trim()) {
+                showAlert('Motivo da concessão é obrigatório', 'error');
+                return;
+            }
+
+            try {
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + days);
+
+                console.log('🎁 DEBUG: Concedendo premium para:', selectedUserForPremium.email);
+                console.log('🎁 DEBUG: UID do usuário:', selectedUserForPremium.id);
+                console.log('🎁 DEBUG: Dias:', days);
+                console.log('🎁 DEBUG: Data expiração:', expiryDate);
+                console.log('🎁 DEBUG: Motivo:', reason);
+
+                const updateData = {
+                    isPremium: true,
+                    currentPlan: 'premium',
+                    premiumExpiryDate: expiryDate,
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: reason,
+                    updatedAt: serverTimestamp(),
+                };
+
+                console.log('🎁 DEBUG: Dados para atualizar:', updateData);
+
+                // 🔧 CORREÇÃO: Usar o UID correto do usuário selecionado
+                await updateDoc(doc(db, 'users', selectedUserForPremium.id), updateData);
+
+                console.log('✅ DEBUG: Premium concedido com sucesso!');
+
+                showAlert(`Premium concedido com sucesso para ${selectedUserForPremium.displayName || selectedUserForPremium.email}!`);
+                closeModal();
+                clearSelectedUser();
+                loadUsers();
+                loadPremiumUsers();
+
+            } catch (error) {
+                console.error('❌ DEBUG: Erro ao conceder premium:', error);
+                console.error('❌ DEBUG: Código do erro:', error.code);
+                console.error('❌ DEBUG: Mensagem do erro:', error.message);
+                showAlert('Erro ao conceder premium: ' + error.message, 'error');
+            }
+        };
+
+        // Extender premium
+        window.extendPremium = async function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const additionalDays = parseInt(prompt('Quantos dias adicionar ao premium?', '30'));
+            if (!additionalDays || additionalDays < 1) return;
+
+            try {
+                let currentExpiry = new Date();
+                if (user.premiumExpiryDate) {
+                    currentExpiry = new Date(user.premiumExpiryDate.seconds * 1000);
+                }
+
+                // Se já expirou, extender a partir de hoje
+                if (currentExpiry <= new Date()) {
+                    currentExpiry = new Date();
+                }
+
+                currentExpiry.setDate(currentExpiry.getDate() + additionalDays);
+
+                await updateDoc(doc(db, 'users', userId), {
+                    premiumExpiryDate: currentExpiry,
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: `Premium estendido por ${additionalDays} dias`,
+                    updatedAt: serverTimestamp(),
+                });
+
+                showAlert(`Premium estendido com sucesso para ${user.displayName || user.email}!`);
+                loadUsers();
+                loadPremiumUsers();
+
+            } catch (error) {
+                console.error('Erro ao extender premium:', error);
+                showAlert('Erro ao extender premium: ' + error.message, 'error');
+            }
+        };
+
+        // Renovar premium
+        window.renewPremium = async function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const days = parseInt(prompt('Quantos dias para renovação?', '30'));
+            if (!days || days < 1) return;
+
+            try {
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + days);
+
+                await updateDoc(doc(db, 'users', userId), {
+                    premiumExpiryDate: expiryDate,
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: `Premium renovado por ${days} dias`,
+                    updatedAt: serverTimestamp(),
+                });
+
+                showAlert(`Premium renovado com sucesso para ${user.displayName || user.email}!`);
+                loadUsers();
+                loadPremiumUsers();
+
+            } catch (error) {
+                console.error('Erro ao renovar premium:', error);
+                showAlert('Erro ao renovar premium: ' + error.message, 'error');
+            }
+        };
+
+        // Remover premium
+        window.removePremium = async function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            if (!confirm(`Remover premium de ${user.displayName || user.email}?`)) return;
+
+            try {
+                await updateDoc(doc(db, 'users', userId), {
+                    isPremium: false,
+                    currentPlan: 'free',
+                    premiumExpiryDate: null,
+                    adminModifiedAt: serverTimestamp(),
+                    adminModifiedBy: currentUser.uid,
+                    adminModificationReason: 'Premium removido por admin',
+                    updatedAt: serverTimestamp(),
+                });
+
+                showAlert(`Premium removido com sucesso de ${user.displayName || user.email}!`);
+                loadUsers();
+                loadPremiumUsers();
+
+            } catch (error) {
+                console.error('Erro ao remover premium:', error);
+                showAlert('Erro ao remover premium: ' + error.message, 'error');
+            }
+        };
+
+        // Mostrar detalhes do usuário premium
+        window.showPremiumUserDetails = async function(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+
+            const modal = document.getElementById('userModal');
+            const title = document.getElementById('userModalTitle');
+            const content = document.getElementById('userDetailsContent');
+
+            title.textContent = `Detalhes Premium: ${user.displayName || user.email}`;
+
+            const createdAt = new Date(user.createdAt.seconds * 1000);
+            const lastLogin = user.lastLogin ? new Date(user.lastLogin.seconds * 1000) : null;
+            const now = new Date();
+
+            let premiumStatus = 'Não premium';
+            let expiryInfo = 'N/A';
+
+            if (user.isAdmin) {
+                premiumStatus = 'Administrador (Premium Ilimitado)';
+                expiryInfo = 'Nunca expira';
+            } else if (user.isPremium) {
+                if (user.premiumExpiryDate) {
+                    const expiry = new Date(user.premiumExpiryDate.seconds * 1000);
+                    const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+
+                    if (expiry <= now) {
+                        premiumStatus = 'Premium Expirado';
+                        expiryInfo = `Expirou em ${expiry.toLocaleDateString('pt-BR')}`;
+                    } else {
+                        premiumStatus = 'Premium Ativo';
+                        expiryInfo = `Expira em ${expiry.toLocaleDateString('pt-BR')} (${daysLeft} dias restantes)`;
+                    }
+                } else {
+                    premiumStatus = 'Premium Ativo';
+                    expiryInfo = 'Data de expiração não definida';
+                }
+            }
+
+            content.innerHTML = `
+                <div class="user-details-modal">
+                    <h3>Informações Básicas</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Nome</div>
+                            <div class="detail-value">${user.displayName || 'Não informado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value">${user.email || 'Não informado'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">UID</div>
+                            <div class="detail-value">${user.id}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">${user.isBlocked ? 'Bloqueado' : 'Ativo'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status Premium</div>
+                            <div class="detail-value">${premiumStatus}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Expiração Premium</div>
+                            <div class="detail-value">${expiryInfo}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Data de Cadastro</div>
+                            <div class="detail-value">${createdAt.toLocaleDateString('pt-BR')}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Último Acesso</div>
+                            <div class="detail-value">${lastLogin ? lastLogin.toLocaleDateString('pt-BR') : 'Nunca'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ações Rápidas de Premium:</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="extendPremium('${user.id}')">➕ Extender Premium</button>
+                        <button class="btn btn-primary" onclick="renewPremium('${user.id}')">🔄 Renovar Premium</button>
+                        ${!user.isAdmin ? '<button class="btn btn-danger" onclick="removePremium(\'' + user.id + '\')">💰 Remover Premium</button>' : ''}
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        };
+
+        // Mostrar modal de ações premium em massa
+        window.showBulkPremiumModal = function() {
+            document.getElementById('bulkPremiumModal').style.display = 'block';
+        };
+
+        // Executar ação premium em massa
+        window.executeBulkPremiumAction = async function() {
+            const filter = document.getElementById('bulkPremiumFilter').value;
+            const action = document.getElementById('bulkPremiumAction').value;
+            const reason = document.getElementById('bulkPremiumReason').value;
+
+            if (!reason.trim()) {
+                showAlert('Motivo da ação é obrigatório', 'error');
+                return;
+            }
+
+            // Filtrar usuários
+            let targetUsers = [...allUsers];
+            const now = new Date();
+            const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+            switch (filter) {
+                case 'nonpremium':
+                    targetUsers = targetUsers.filter(u => !u.isPremium && !u.isAdmin);
+                    break;
+                case 'expiring':
+                    targetUsers = targetUsers.filter(u => {
+                        if (u.isAdmin || !u.premiumExpiryDate) return false;
+                        const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                        return expiry > now && expiry <= sevenDaysFromNow;
+                    });
+                    break;
+                case 'expired':
+                    targetUsers = targetUsers.filter(u => {
+                        if (u.isAdmin || !u.premiumExpiryDate) return false;
+                        const expiry = new Date(u.premiumExpiryDate.seconds * 1000);
+                        return expiry <= now;
+                    });
+                    break;
+            }
+
+            if (targetUsers.length === 0) {
+                showAlert('Nenhum usuário encontrado para a ação selecionada', 'error');
+                return;
+            }
+
+            const confirmText = `EXECUTAR AÇÃO PREMIUM EM MASSA\n\nAção: ${action}\nUsuários afetados: ${targetUsers.length}\n\nDigite "CONFIRMAR" para executar:`;
+
+            const confirmation = prompt(confirmText);
+            if (confirmation !== 'CONFIRMAR') {
+                showAlert('Ação em massa cancelada', 'info');
+                return;
+            }
+
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (const user of targetUsers) {
+                    try {
+                        const updateData = {
+                            adminModifiedAt: serverTimestamp(),
+                            adminModifiedBy: currentUser.uid,
+                            adminModificationReason: reason,
+                            updatedAt: serverTimestamp(),
+                        };
+
+                        switch (action) {
+                            case 'grant':
+                                updateData.isPremium = true;
+                                updateData.currentPlan = 'premium';
+                                const grantExpiryDate = new Date();
+                                grantExpiryDate.setDate(grantExpiryDate.getDate() + 30);
+                                updateData.premiumExpiryDate = grantExpiryDate;
+                                break;
+                            case 'extend':
+                                if (user.premiumExpiryDate) {
+                                    const currentExpiry = new Date(user.premiumExpiryDate.seconds * 1000);
+                                    currentExpiry.setDate(currentExpiry.getDate() + 30);
+                                    updateData.premiumExpiryDate = currentExpiry;
+                                }
+                                break;
+                            case 'renew':
+                                const renewExpiryDate = new Date();
+                                renewExpiryDate.setDate(renewExpiryDate.getDate() + 30);
+                                updateData.premiumExpiryDate = renewExpiryDate;
+                                break;
+                            case 'remove':
+                                updateData.isPremium = false;
+                                updateData.currentPlan = 'free';
+                                updateData.premiumExpiryDate = null;
+                                break;
+                        }
+
+                        await updateDoc(doc(db, 'users', user.id), updateData);
+                        successCount++;
+
+                    } catch (error) {
+                        console.error(`Erro ao processar ${user.email}:`, error);
+                        errorCount++;
+                    }
+                }
+
+                closeModal();
+                showAlert(`Ação concluída: ${successCount} sucesso(s), ${errorCount} erro(s)`);
+                loadUsers();
+                loadPremiumUsers();
+
+            } catch (error) {
+                console.error('Erro na ação premium em massa:', error);
+                showAlert('Erro na ação premium em massa: ' + error.message, 'error');
+            }
+        };
+
+        // Atualizar lista premium
+        window.refreshPremiumUsers = function() {
+            loadPremiumUsers();
+            showAlert('Lista premium atualizada com sucesso');
+        };
+
+        // Função para detectar contexto Flutter
+        function detectFlutterContext() {
+            try {
+                // Verificações para detectar se estamos em um WebView do Flutter
+                const checks = [
+                    window.flutter_inappwebview !== undefined,
+                    window.parent !== window,
+                    window.location.href.includes('flutter'),
+                    document.referrer.includes('flutter'),
+                    navigator.userAgent.includes('Flutter'),
+                    window.webkit !== undefined && window.webkit.messageHandlers !== undefined,
+                    typeof window.flutterWebView !== 'undefined',
+                    window.location.protocol === 'file:',
+                    window.location.hostname === 'localhost' && window.location.port === '0'
+                ];
+
+                const flutterDetected = checks.some(check => check);
+                console.log('🔍 Verificações Flutter:', checks);
+                console.log('🎯 Flutter detectado:', flutterDetected);
+
+                return flutterDetected;
+            } catch (e) {
+                console.log('Erro na detecção Flutter:', e);
+                return false;
+            }
+        }
+
+        // Inicialização - PARA DESENVOLVIMENTO LOCAL
+        document.addEventListener('DOMContentLoaded', function() {
+            // Detectar se estamos rodando no contexto do Flutter
+            const isFlutterContext = detectFlutterContext();
+
+            console.log('🔍 Contexto detectado:', isFlutterContext ? 'Flutter' : 'Navegador');
+
+            if (isFlutterContext) {
+                // Modo Flutter - tentar autenticação real primeiro
+                console.log('🔧 Detectado contexto Flutter - tentando autenticação real...');
+
+                // Aguardar um pouco para o Firebase carregar
+                setTimeout(() => {
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            console.log('✅ Usuário autenticado no Flutter:', user.email);
+                            // No contexto Flutter, qualquer usuário logado é tratado como super admin
+                            if (isSuperAdmin(user.email)) {
+                                currentUser = user;
+                                updateUserInfo(user);
+                                loadUsers();
+                                showAlert(`🎉 Bem-vindo ao painel admin, ${user.email}!`, 'success');
+                            } else {
+                                // Adicionar automaticamente como super admin se logado no Flutter
+                                const wasAdded = addSuperAdmin(user.email);
+                                if (wasAdded) {
+                                    currentUser = user;
+                                    updateUserInfo(user);
+                                    loadUsers();
+                                    showAlert(`🎉 Novo super admin adicionado automaticamente!\nBem-vindo, ${user.email}!`, 'success');
+                                } else {
+                                    // Já é super admin
+                                    currentUser = user;
+                                    updateUserInfo(user);
+                                    loadUsers();
+                                    showAlert(`Bem-vindo, ${user.email}!`, 'success');
+                                }
+                            }
+                        } else {
+                            console.log('❌ Nenhum usuário autenticado no Flutter');
+                            // Fallback para modo desenvolvimento
+                            const mockUser = {
+                                uid: 'flutter-admin-dev',
+                                email: 'lorenalessa90@gmail.com',
+                                displayName: 'Admin Flutter'
+                            };
+                            currentUser = mockUser;
+                            updateUserInfo(mockUser);
+                            loadUsers();
+                            showAlert('🔧 MODO FLUTTER: Usando conta de desenvolvimento', 'info');
+                        }
+                    });
+                }, 1000);
+            } else {
+                // Modo desenvolvimento local padrão
+                const mockUser = {
+                    uid: 'master-admin-dev',
+                    email: 'lorenalessa90@gmail.com',
+                    displayName: 'Administrador Master'
+                };
+
+                currentUser = mockUser;
+                updateUserInfo(mockUser);
+                loadUsers();
+                showAlert('🔧 MODO DESENVOLVIMENTO: Login automático ativado', 'info');
+            }
+        });
+
+        // Login com Google
+        window.loginWithGoogle = async function() {
+            try {
+                // Import Google Auth Provider
+                const { GoogleAuthProvider, signInWithPopup } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+
+                const provider = new GoogleAuthProvider();
+                provider.addScope('email');
+                provider.addScope('profile');
+
+                const result = await signInWithPopup(auth, provider);
+                console.log('Login com Google bem-sucedido:', result.user.email);
+
+            } catch (error) {
+                console.error('Erro no login com Google:', error);
+                alert('Erro no login com Google: ' + error.message);
+            }
+        };
+    </script>
+</body>
+</html>
