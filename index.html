@@ -3,56 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinWise Admin</title>
+    <title>FinWise - Políticas</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
         }
         .container {
-            text-align: center;
+            background: white;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        h1 { margin-bottom: 20px; }
-        p { margin-bottom: 30px; opacity: 0.9; }
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: rgba(255, 255, 255, 0.2);
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .link-button {
+            display: block;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-decoration: none;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+        .link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        .info p {
+            margin: 8px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
         }
     </style>
-    <script>
-        // Redirecionamento automático para login
-        setTimeout(() => {
-            window.location.href = 'admin_login.html';
-        }, 2000);
-    </script>
 </head>
 <body>
     <div class="container">
-        <h1>🛠️ FinWise Admin Panel</h1>
-        <p>Sistema de gerenciamento de usuários premium</p>
-        <p>Redirecionando para login...</p>
-        <a href="admin_login.html" class="btn">Acessar Agora</a>
+        <h1>FinWise</h1>
+        <p class="subtitle">Controle Financeiro Pessoal</p>
+
+        <div class="info">
+            <p><strong>Desenvolvedor:</strong> Lorena Coutinho (lorecout)</p>
+            <p><strong>Package:</strong> com.lorecout.finwise</p>
+            <p><strong>Email:</strong> lorecout.dev@gmail.com</p>
+            <p><strong>Última atualização:</strong> 02 de dezembro de 2025</p>
+        </div>
+
+        <div class="links">
+            <a href="privacy_policy.html" class="link-button">
+                📜 Política de Privacidade
+            </a>
+            <a href="terms_of_service.html" class="link-button">
+                📋 Termos de Serviço
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 FinWise - Desenvolvido por Lorena Coutinho</p>
+        </div>
     </div>
 </body>
 </html>
