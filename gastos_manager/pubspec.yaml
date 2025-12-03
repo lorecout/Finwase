@@ -2,7 +2,7 @@ name: gastos_manager
 description: "Finans - Aplicativo de controle financeiro pessoal com Firebase, IA e recursos premium."
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 1.0.4+5
 
 environment:
   sdk: ^3.8.1
@@ -75,6 +75,7 @@ dependencies:
   
   # Timezone para notificações
   timezone: ^0.9.4
+  app_attest_integrity: ^1.0.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

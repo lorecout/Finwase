@@ -8,10 +8,9 @@ class PlayIntegrityService {
     try {
       await FirebaseAppCheck.instance.activate(
         // Para Android: usa Play Integrity API
-        androidProvider: AndroidAppCheckProviderType.playIntegrity,
+        androidProvider: AndroidProvider.playIntegrity,
         // Para iOS: usa App Attest
-        appleProvider: AppleAppCheckProviderType.appAttest,
-        webProvider: ReCaptchaV3Provider('token'),
+        appleProvider: AppleProvider.deviceCheck,
       );
       print('✅ Firebase App Check inicializado com Play Integrity API');
     } catch (e) {

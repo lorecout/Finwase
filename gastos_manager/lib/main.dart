@@ -20,6 +20,7 @@ import 'services/referral_service.dart';
 import 'services/streak_service.dart';
 import 'services/budget_service.dart';
 import 'services/firebase_messaging_service.dart';
+import 'services/play_integrity_service.dart';
 import 'screens/auth_page.dart';
 import 'screens/loading_screen.dart';
 import 'screens/main_navigation_page.dart';
@@ -84,7 +85,7 @@ void main() async {
         final token = await FirebaseAppCheck.instance.getToken(true);
         if (token != null && token.isNotEmpty) {
           if (kDebugMode) {
-            debugPrint('✅ FIREBASE: App Check token DEBUG = ' + token);
+            debugPrint('✅ FIREBASE: App Check token DEBUG = $token');
           } else {
             debugPrint('✅ FIREBASE: App Check token obtido');
           }
@@ -97,6 +98,17 @@ void main() async {
       debugPrint('✅ FIREBASE: App Check ativado');
     } catch (e) {
       debugPrint('⚠️ FIREBASE: App Check falhou: $e');
+    }
+  }
+
+  // Inicializar Play Integrity Service para verificação adicional de integridade
+  if (!isEmulatorEnvironment && !Platform.isWindows) {
+    try {
+      await PlayIntegrityService.initialize();
+      await PlayIntegrityService.enableTokenAutoRefresh();
+      debugPrint('✅ SECURITY: Play Integrity API ativada');
+    } catch (e) {
+      debugPrint('⚠️ SECURITY: Play Integrity API falhou: $e');
     }
   }
 
@@ -134,8 +146,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isInitialized = false;
-  String _loadingMessage = 'Inicializando...';
-  double _loadingProgress = 0.0;
+  final String _loadingMessage = 'Inicializando...';
+  final double _loadingProgress = 0.0;
 
   @override
   void initState() {
@@ -278,7 +290,7 @@ class _MyAppState extends State<MyApp> {
               '/theme-settings': (context) => const ThemeSettingsPage(),
               '/profile': (context) => const ProfilePage(),
               '/referral': (context) => const ReferralPage(),
-              '/budget': (context) => BudgetPage(),
+              '/budget': (context) => const BudgetPage(),
               '/notifications-settings': (context) =>
                   const NotificationsSettingsPage(),
               '/premium': (context) => const PremiumUpgradePage(),
