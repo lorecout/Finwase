@@ -2,7 +2,7 @@ name: gastos_manager
 description: "Finans - Aplicativo de controle financeiro pessoal com Firebase, IA e recursos premium."
 publish_to: 'none'
 
-version: 1.0.5+6
+version: 1.0.6+7
 
 environment:
   sdk: ^3.8.1
