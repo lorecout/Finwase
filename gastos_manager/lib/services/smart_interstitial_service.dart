@@ -194,13 +194,13 @@ class RewardedAdButton extends StatefulWidget {
   final Color? color;
 
   const RewardedAdButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
     required this.onRewarded,
     this.rewardMessage = 'Assista ao anúncio para ganhar a recompensa!',
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   State<RewardedAdButton> createState() => _RewardedAdButtonState();

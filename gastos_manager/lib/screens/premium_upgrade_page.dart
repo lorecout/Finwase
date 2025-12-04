@@ -271,7 +271,7 @@ class _PremiumUpgradePageState extends State<PremiumUpgradePage> {
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 16),
+                  const Icon(Icons.check_circle, color: Colors.green, size: 16),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(feature, style: const TextStyle(fontSize: 14)),

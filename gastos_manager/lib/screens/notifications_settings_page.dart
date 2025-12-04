@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/firebase_messaging_service.dart';
 
 class NotificationsSettingsPage extends StatefulWidget {
-  const NotificationsSettingsPage({Key? key}) : super(key: key);
+  const NotificationsSettingsPage({super.key});
 
   @override
   State<NotificationsSettingsPage> createState() =>

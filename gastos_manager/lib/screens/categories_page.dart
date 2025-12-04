@@ -281,7 +281,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Confirmar Exclusão'),
-        content: const Text('Deseja excluir \"\"?'),
+        content: const Text('Deseja excluir ""?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

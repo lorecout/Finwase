@@ -138,7 +138,7 @@ class StreakWidget extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${StreakService.streakBadges[nextMilestone] ?? 'Desafio'}',
+                            StreakService.streakBadges[nextMilestone] ?? 'Desafio',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -198,7 +198,7 @@ class StreakWidget extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '${StreakService.streakBadges[badge] ?? ''}',
+                                    StreakService.streakBadges[badge] ?? '',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 11,

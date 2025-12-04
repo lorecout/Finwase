@@ -7,8 +7,7 @@ class AdFallbackWidget extends StatelessWidget {
   final String reason;
   final VoidCallback? onRetry;
 
-  const AdFallbackWidget({Key? key, required this.reason, this.onRetry})
-    : super(key: key);
+  const AdFallbackWidget({super.key, required this.reason, this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -157,10 +156,10 @@ class SmartAdWidget extends StatefulWidget {
   final String fallbackReason;
 
   const SmartAdWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.fallbackReason = 'Anúncio indisponível',
-  }) : super(key: key);
+  });
 
   @override
   State<SmartAdWidget> createState() => _SmartAdWidgetState();

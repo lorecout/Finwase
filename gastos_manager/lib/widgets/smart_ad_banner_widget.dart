@@ -13,12 +13,12 @@ class SmartAdBannerWidget extends StatefulWidget {
   final bool isActive;
 
   const SmartAdBannerWidget({
-    Key? key,
+    super.key,
     this.margin,
     this.height,
     this.debugLabel,
     this.isActive = true,
-  }) : super(key: key);
+  });
 
   @override
   State<SmartAdBannerWidget> createState() => _SmartAdBannerWidgetState();
@@ -172,7 +172,7 @@ class _SmartAdBannerWidgetState extends State<SmartAdBannerWidget> {
             decoration: BoxDecoration(
               color: Theme.of(
                 context,
-              ).colorScheme.surfaceVariant.withValues(alpha: 0.3),
+              ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Center(
@@ -225,7 +225,7 @@ class _SmartAdBannerWidgetState extends State<SmartAdBannerWidget> {
       decoration: BoxDecoration(
         color: Theme.of(
           context,
-        ).colorScheme.surfaceVariant.withValues(alpha: 0.5),
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
       ),
       child: Row(
         children: [

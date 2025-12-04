@@ -90,11 +90,11 @@ class _ReferralPageState extends State<ReferralPage> {
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Column(
+                  child: const Column(
                     children: [
-                      const Icon(Icons.people, size: 48, color: Colors.white),
-                      const SizedBox(height: 12),
-                      const Text(
+                      Icon(Icons.people, size: 48, color: Colors.white),
+                      SizedBox(height: 12),
+                      Text(
                         'Convide Amigos!',
                         style: TextStyle(
                           color: Colors.white,
@@ -103,8 +103,8 @@ class _ReferralPageState extends State<ReferralPage> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
+                      SizedBox(height: 8),
+                      Text(
                         'Ganhe 1 mês de Premium para cada amigo que se inscrever',
                         style: TextStyle(color: Colors.white70, fontSize: 14),
                         textAlign: TextAlign.center,
@@ -259,34 +259,34 @@ class _ReferralPageState extends State<ReferralPage> {
                 const SizedBox(height: 24),
 
                 // Benefícios
-                Card(
+                const Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Como funciona?',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16),
                         _BenefitItem(
                           number: 1,
                           title: 'Compartilhe seu código',
                           description:
                               'Envie para amigos por WhatsApp, email ou redes sociais',
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         _BenefitItem(
                           number: 2,
                           title: 'Amigo se cadastra',
                           description:
                               'Seu amigo baixa o app e usa o seu código ao registrar',
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         _BenefitItem(
                           number: 3,
                           title: 'Ambos ganham Premium',

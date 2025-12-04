@@ -90,7 +90,7 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
                             color: Colors.white.withValues(alpha: 0.2),
                           ),
                         ),
-                        child: Column(
+                        child: const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
@@ -100,8 +100,8 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
                                   color: Colors.amber,
                                   size: 20,
                                 ),
-                                const SizedBox(width: 8),
-                                const Text(
+                                SizedBox(width: 8),
+                                Text(
                                   'Como usar:',
                                   style: TextStyle(
                                     color: Colors.white,
@@ -111,8 +111,8 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
-                            const Text(
+                            SizedBox(height: 12),
+                            Text(
                               'Digite suas transações em texto natural, uma por linha:\n\n'
                               '• menos 500 de aluguel\n'
                               '• mais 1800 de salario\n'
@@ -310,13 +310,13 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
                                   constraints: const BoxConstraints(),
                                 ),
                                 if (parsed.isValid)
-                                  Icon(
+                                  const Icon(
                                     Icons.check_circle,
                                     color: Colors.green,
                                     size: 20,
                                   )
                                 else
-                                  Icon(
+                                  const Icon(
                                     Icons.error,
                                     color: Colors.red,
                                     size: 20,

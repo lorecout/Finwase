@@ -109,7 +109,7 @@ class ReferralService extends ChangeNotifier {
       }, SetOptions(merge: true));
 
       // Conceder 1 mês de premium ao novo usuário
-      final expiryDate = DateTime.now().add(Duration(days: 30));
+      final expiryDate = DateTime.now().add(const Duration(days: 30));
       await _firestore.collection('users').doc(user.uid).set({
         'premium_until_referral': expiryDate,
         'premium_from_referral': true,
@@ -133,7 +133,7 @@ class ReferralService extends ChangeNotifier {
         final referrerPremiumExpiry =
             referrerDoc.data()?['premium_until'] as Timestamp?;
         final newExpiry = (referrerPremiumExpiry?.toDate() ?? DateTime.now())
-            .add(Duration(days: 30));
+            .add(const Duration(days: 30));
         await _firestore.collection('users').doc(referrerId).set({
           'premium_until': newExpiry,
           'last_referral_bonus_at': FieldValue.serverTimestamp(),

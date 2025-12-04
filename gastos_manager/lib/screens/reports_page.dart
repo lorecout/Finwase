@@ -82,9 +82,9 @@ class _ReportsPageState extends State<ReportsPage>
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     'Resumo Financeiro',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -130,12 +130,12 @@ class _ReportsPageState extends State<ReportsPage>
 
   Widget _buildGraficoPizza(Map<String, double> gastosPorCategoria) {
     if (gastosPorCategoria.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.pie_chart_outline, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Nenhuma despesa encontrada',
               style: TextStyle(color: Colors.grey),
@@ -166,9 +166,9 @@ class _ReportsPageState extends State<ReportsPage>
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Gastos por Categoria',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -183,12 +183,12 @@ class _ReportsPageState extends State<ReportsPage>
 
   Widget _buildGraficoBarras(List<Transacao> transacoes) {
     if (transacoes.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.bar_chart, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Nenhuma transação encontrada',
               style: TextStyle(color: Colors.grey),
@@ -203,9 +203,9 @@ class _ReportsPageState extends State<ReportsPage>
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Movimentação Diária',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -213,7 +213,7 @@ class _ReportsPageState extends State<ReportsPage>
               child: BarChart(
                 BarChartData(
                   barGroups: [],
-                  titlesData: FlTitlesData(
+                  titlesData: const FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: true),
                     ),
@@ -269,10 +269,10 @@ class _ReportsPageState extends State<ReportsPage>
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('Relatórios'),
+            title: const Text('Relatórios'),
             bottom: TabBar(
               controller: _tabController,
-              tabs: [
+              tabs: const [
                 Tab(text: 'Resumo'),
                 Tab(text: 'Por Categoria'),
                 Tab(text: 'Diário'),
@@ -283,8 +283,8 @@ class _ReportsPageState extends State<ReportsPage>
             children: [
               // Seletor de mês
               Container(
-                margin: EdgeInsets.all(16),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey[300]!),
                   borderRadius: BorderRadius.circular(8),
@@ -294,18 +294,18 @@ class _ReportsPageState extends State<ReportsPage>
                   children: [
                     IconButton(
                       onPressed: () => _alterarMes(-1),
-                      icon: Icon(Icons.chevron_left),
+                      icon: const Icon(Icons.chevron_left),
                     ),
                     Text(
                       '${_getNomeMes()} ${_mesAtual.year}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     IconButton(
                       onPressed: () => _alterarMes(1),
-                      icon: Icon(Icons.chevron_right),
+                      icon: const Icon(Icons.chevron_right),
                     ),
                   ],
                 ),
@@ -324,7 +324,7 @@ class _ReportsPageState extends State<ReportsPage>
                     // Aba Por Categoria
                     SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: _buildGraficoPizza(gastosPorCategoria),
                       ),
                     ),
@@ -332,7 +332,7 @@ class _ReportsPageState extends State<ReportsPage>
                     // Aba Diário
                     SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: _buildGraficoBarras(transacoesMes),
                       ),
                     ),

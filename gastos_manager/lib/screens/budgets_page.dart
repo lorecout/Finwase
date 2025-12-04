@@ -112,7 +112,7 @@ class _BudgetsPageState extends State<BudgetsPage> {
                   Consumer<AppState>(
                     builder: (context, appState, child) {
                       return DropdownButtonFormField<Categoria>(
-                        value: _categoriaSelecionada,
+                        initialValue: _categoriaSelecionada,
                         decoration: const InputDecoration(
                           labelText: 'Categoria (Opcional)',
                           border: OutlineInputBorder(),

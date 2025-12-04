@@ -16,8 +16,8 @@ plugins {
 
 android {
     namespace = "com.lorecout.finwise"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    compileSdk = 36
+    // Removido ndkVersion para usar versão padrão
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -33,17 +33,50 @@ android {
     applicationId = "com.lorecout.finwise"
         minSdk = 24
         targetSdk = flutter.targetSdkVersion
-        versionCode = 2 // Atualizado para novo código de versão
-        versionName = "1.0.1" // Atualizado para novo nome de versão
+    // Usar versão definida no pubspec.yaml via plugin do Flutter
+    versionCode = flutter.versionCode
+    versionName = flutter.versionName
         multiDexEnabled = true
+        
+        // Desabilitar strip de símbolos nativos para evitar erro
+        ndk {
+            // Não fazer strip automático - o AAB já está otimizado
+        }
+    }
+    
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file(keystoreProperties["storeFile"] ?: "release.keystore")
-            storePassword = keystoreProperties["storePassword"] as String?
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
+            val keyPropsFile = rootProject.file("key.properties")
+            if (!keyPropsFile.exists()) {
+                throw GradleException("key.properties file not found at: ${keyPropsFile.absolutePath}")
+            }
+            
+            val keyProps = Properties()
+            keyProps.load(FileInputStream(keyPropsFile))
+            
+            val storeFilePath = keyProps.getProperty("storeFile") 
+                ?: throw GradleException("storeFile not found in key.properties")
+            storeFile = file(storeFilePath)
+            
+            if (!storeFile!!.exists()) {
+                throw GradleException("Keystore file not found at: ${storeFile!!.absolutePath}")
+            }
+            
+            storePassword = keyProps.getProperty("storePassword") 
+                ?: throw GradleException("storePassword not found in key.properties")
+            keyAlias = keyProps.getProperty("keyAlias") 
+                ?: throw GradleException("keyAlias not found in key.properties")
+            keyPassword = keyProps.getProperty("keyPassword") 
+                ?: throw GradleException("keyPassword not found in key.properties")
+            
+            println("✓ Release signing configured with keystore: ${storeFile!!.absolutePath}")
+            println("✓ Using keyAlias: $keyAlias")
         }
     }
     buildTypes {

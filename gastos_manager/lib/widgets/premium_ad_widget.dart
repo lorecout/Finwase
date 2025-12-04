@@ -9,11 +9,11 @@ class PremiumAdWidget extends StatelessWidget {
   final IconData icon;
 
   const PremiumAdWidget({
-    Key? key,
+    super.key,
     this.message = '🚀 Remova anúncios e desbloqueie recursos avançados!',
     this.buttonText = 'UPGRADE PREMIUM',
     this.icon = Icons.workspace_premium,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

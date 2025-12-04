@@ -30,15 +30,11 @@ class CustomThemeData {
       colorScheme: ColorScheme(
         primary: primaryColor,
         secondary: secondaryColor,
-        surface: surfaceColor,
-        background: surfaceColor, // Usar surface como background
+        surface: surfaceColor, // Usar surface como background
         error: errorColor ?? Colors.red,
         onPrimary: _getContrastColor(primaryColor),
         onSecondary: _getContrastColor(secondaryColor),
-        onSurface: brightness == Brightness.dark ? Colors.white : Colors.black,
-        onBackground: brightness == Brightness.dark
-            ? Colors.white
-            : Colors.black, // Manter compatibilidade
+        onSurface: brightness == Brightness.dark ? Colors.white : Colors.black, // Manter compatibilidade
         onError: Colors.white,
         brightness: brightness,
         tertiary: tertiaryColor,
@@ -131,13 +127,13 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFF006994),
+        seedColor: const Color(0xFF006994),
         brightness: Brightness.light,
-        primary: Color(0xFF006994),
-        secondary: Color(0xFF4FC3F7),
-        tertiary: Color(0xFF00BCD4),
+        primary: const Color(0xFF006994),
+        secondary: const Color(0xFF4FC3F7),
+        tertiary: const Color(0xFF00BCD4),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFF006994),
@@ -155,13 +151,13 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFFFF6B35),
+        seedColor: const Color(0xFFFF6B35),
         brightness: Brightness.light,
-        primary: Color(0xFFFF6B35),
-        secondary: Color(0xFFFFB627),
-        tertiary: Color(0xFFFF8F00),
+        primary: const Color(0xFFFF6B35),
+        secondary: const Color(0xFFFFB627),
+        tertiary: const Color(0xFFFF8F00),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFFFF6B35),
@@ -179,13 +175,13 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFF2E7D32),
+        seedColor: const Color(0xFF2E7D32),
         brightness: Brightness.light,
-        primary: Color(0xFF2E7D32),
-        secondary: Color(0xFF4CAF50),
-        tertiary: Color(0xFF66BB6A),
+        primary: const Color(0xFF2E7D32),
+        secondary: const Color(0xFF4CAF50),
+        tertiary: const Color(0xFF66BB6A),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFF2E7D32),
@@ -203,15 +199,15 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFF1A237E),
+        seedColor: const Color(0xFF1A237E),
         brightness: Brightness.dark,
-        primary: Color(0xFF3949AB),
-        secondary: Color(0xFF5E35B1),
-        tertiary: Color(0xFF7E57C2),
-        surface: Color(0xFF121212),
-        background: Color(0xFF121212), // Usar surface como background
+        primary: const Color(0xFF3949AB),
+        secondary: const Color(0xFF5E35B1),
+        tertiary: const Color(0xFF7E57C2),
+        surface: const Color(0xFF121212),
+        background: const Color(0xFF121212), // Usar surface como background
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFF1A237E),
@@ -220,7 +216,7 @@ class ThemeService with ChangeNotifier {
       cardTheme: CardThemeData(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: Color(0xFF1E1E1E),
+        color: const Color(0xFF1E1E1E),
       ),
     );
 
@@ -229,13 +225,13 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFFE91E63),
+        seedColor: const Color(0xFFE91E63),
         brightness: Brightness.light,
-        primary: Color(0xFFE91E63),
-        secondary: Color(0xFFF06292),
-        tertiary: Color(0xFFF8BBD9),
+        primary: const Color(0xFFE91E63),
+        secondary: const Color(0xFFF06292),
+        tertiary: const Color(0xFFF8BBD9),
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFFE91E63),
@@ -253,15 +249,15 @@ class ThemeService with ChangeNotifier {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFFFFD700),
+        seedColor: const Color(0xFFFFD700),
         brightness: Brightness.light,
-        primary: Color(0xFFFFD700),
-        secondary: Color(0xFFFFC107),
-        tertiary: Color(0xFFFF9800),
+        primary: const Color(0xFFFFD700),
+        secondary: const Color(0xFFFFC107),
+        tertiary: const Color(0xFFFF9800),
         onPrimary: Colors.black,
         onSecondary: Colors.black,
       ),
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
         backgroundColor: Color(0xFFFFD700),

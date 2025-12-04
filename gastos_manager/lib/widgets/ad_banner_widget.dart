@@ -6,7 +6,7 @@ import '../services/premium_service.dart';
 
 /// Widget de banner de anúncio que só aparece para usuários free
 class AdBannerWidget extends StatefulWidget {
-  const AdBannerWidget({Key? key}) : super(key: key);
+  const AdBannerWidget({super.key});
 
   @override
   State<AdBannerWidget> createState() => _AdBannerWidgetState();
@@ -151,18 +151,18 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
 
         // Se está carregando, mostrar indicador
         if (_isLoading) {
-          return Center(
+          return const Center(
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text('Carregando anúncio...'),
                 ],
               ),

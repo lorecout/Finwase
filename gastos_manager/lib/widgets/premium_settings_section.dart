@@ -66,7 +66,7 @@ class PremiumSettingsSection extends StatelessWidget {
                           ),
                         ),
                       )
-                    : Icon(Icons.verified, color: Colors.green),
+                    : const Icon(Icons.verified, color: Colors.green),
               ),
               if (premiumService.isPremium) ...[
                 _buildDivider(),

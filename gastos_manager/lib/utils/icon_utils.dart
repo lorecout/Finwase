@@ -27,7 +27,7 @@ class IconUtils {
       adaptiveSize = minSize;
     }
 
-    return Container(
+    return SizedBox(
       width: adaptiveSize,
       height: adaptiveSize,
       child: Image.asset(assetPath, fit: fit, color: color),

@@ -45,7 +45,7 @@ class DesignSystem {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [darkColor, mediumColor, lightColor],
-      stops: [0.0, 0.5, 1.0],
+      stops: const [0.0, 0.5, 1.0],
     );
   }
 
@@ -494,7 +494,7 @@ class _PulsingLogoState extends State<PulsingLogo>
             child: Container(
               width: widget.size,
               height: widget.size,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: DesignSystem.logoGradient,
                 boxShadow: DesignSystem.logoShadow,
@@ -562,7 +562,7 @@ class _PulsingAppIconState extends State<PulsingAppIcon>
             child: Container(
               width: widget.size,
               height: widget.size,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: DesignSystem.logoGradient,
                 boxShadow: DesignSystem.logoShadow,

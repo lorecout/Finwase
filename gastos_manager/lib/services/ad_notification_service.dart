@@ -81,7 +81,7 @@ class AdNotificationService extends ChangeNotifier {
 
 /// Widget para mostrar notificações sobre anúncios
 class AdNotificationWidget extends StatefulWidget {
-  const AdNotificationWidget({Key? key}) : super(key: key);
+  const AdNotificationWidget({super.key});
 
   @override
   State<AdNotificationWidget> createState() => _AdNotificationWidgetState();

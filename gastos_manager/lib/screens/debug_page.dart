@@ -48,7 +48,7 @@ class _DebugPageState extends State<DebugPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.analytics, color: Colors.blue),
+                const Icon(Icons.analytics, color: Colors.blue),
                 const SizedBox(width: 8),
                 Text(
                   'Análise de Dados',
@@ -139,7 +139,7 @@ class _DebugPageState extends State<DebugPage> {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),
@@ -164,7 +164,7 @@ class _DebugPageState extends State<DebugPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.list_alt, color: Colors.green),
+                    const Icon(Icons.list_alt, color: Colors.green),
                     const SizedBox(width: 8),
                     Text(
                       'Logs de Debug (${logs.length})',
@@ -230,7 +230,7 @@ class _DebugPageState extends State<DebugPage> {
           children: [
             Row(
               children: [
-                Icon(Icons.settings, color: Colors.orange),
+                const Icon(Icons.settings, color: Colors.orange),
                 const SizedBox(width: 8),
                 Text(
                   'Ações Rápidas',

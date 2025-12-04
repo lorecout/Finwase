@@ -601,11 +601,11 @@ class _TransactionsPageState extends State<TransactionsPage>
                       },
                       backgroundColor: Colors.amber,
                       heroTag: "bulk",
+                      tooltip: 'Registros em Massa',
                       child: Icon(
                         Icons.workspace_premium,
                         color: colorScheme.onPrimary,
                       ),
-                      tooltip: 'Registros em Massa',
                     );
                   }
                   return const SizedBox.shrink();

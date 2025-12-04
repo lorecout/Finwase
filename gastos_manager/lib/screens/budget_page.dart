@@ -5,6 +5,8 @@ import '../services/budget_service.dart';
 import '../services/app_state.dart';
 
 class BudgetPage extends StatefulWidget {
+  const BudgetPage({super.key});
+
   @override
   State<BudgetPage> createState() => _BudgetPageState();
 }
@@ -27,33 +29,33 @@ class _BudgetPageState extends State<BudgetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('💰 Orçamentos'),
-        backgroundColor: Color(0xFF6B63FF),
+        title: const Text('💰 Orçamentos'),
+        backgroundColor: const Color(0xFF6B63FF),
       ),
       body: Consumer2<BudgetService, AppState>(
         builder: (context, budgetService, appState, _) {
           return SingleChildScrollView(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Resumo do mês
                 _buildResumo(budgetService),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Gráfico de orçamento vs gasto
                 if (budgetService.budgets.isNotEmpty)
                   _buildGraficoOrcamento(budgetService),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Cards de alertas
                 _buildAlertas(budgetService),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Sugestões
                 if (budgetService.suggestions.isNotEmpty)
                   _buildSugestes(budgetService),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
 
                 // Lista de orçamentos salvos
                 _buildOrcamentosSalvos(budgetService, context),
@@ -76,18 +78,18 @@ class _BudgetPageState extends State<BudgetPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Color(0xFF6B63FF), Color(0xFF8B7FFF)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Resumo do Mês',
               style: TextStyle(
                 color: Colors.white,
@@ -95,17 +97,17 @@ class _BudgetPageState extends State<BudgetPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Orçado', style: TextStyle(color: Colors.white70)),
+                    const Text('Orçado', style: TextStyle(color: Colors.white70)),
                     Text(
                       'R\$ ${totalOrcado.toStringAsFixed(2)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -116,10 +118,10 @@ class _BudgetPageState extends State<BudgetPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Gasto', style: TextStyle(color: Colors.white70)),
+                    const Text('Gasto', style: TextStyle(color: Colors.white70)),
                     Text(
                       'R\$ ${totalGasto.toStringAsFixed(2)}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -129,7 +131,7 @@ class _BudgetPageState extends State<BudgetPage> {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
@@ -141,10 +143,10 @@ class _BudgetPageState extends State<BudgetPage> {
                 ),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               '${percentualUsado.toStringAsFixed(1)}% do orçamento utilizado',
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+              style: const TextStyle(color: Colors.white70, fontSize: 12),
             ),
           ],
         ),
@@ -175,15 +177,15 @@ class _BudgetPageState extends State<BudgetPage> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               '📊 Orçamento vs Gasto',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               height: 250,
               child: BarChart(
@@ -216,14 +218,14 @@ class _BudgetPageState extends State<BudgetPage> {
                               dados[value.toInt()]['categoria']
                                   .toString()
                                   .substring(0, 3),
-                              style: TextStyle(fontSize: 10),
+                              style: const TextStyle(fontSize: 10),
                             );
                           }
-                          return Text('');
+                          return const Text('');
                         },
                       ),
                     ),
-                    leftTitles: AxisTitles(
+                    leftTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: true),
                     ),
                   ),
@@ -231,7 +233,7 @@ class _BudgetPageState extends State<BudgetPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Container(
@@ -242,19 +244,19 @@ class _BudgetPageState extends State<BudgetPage> {
                     shape: BoxShape.circle,
                   ),
                 ),
-                SizedBox(width: 8),
-                Text('Orçado', style: TextStyle(fontSize: 12)),
-                SizedBox(width: 24),
+                const SizedBox(width: 8),
+                const Text('Orçado', style: TextStyle(fontSize: 12)),
+                const SizedBox(width: 24),
                 Container(
                   width: 12,
                   height: 12,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.orange,
                     shape: BoxShape.circle,
                   ),
                 ),
-                SizedBox(width: 8),
-                Text('Gasto', style: TextStyle(fontSize: 12)),
+                const SizedBox(width: 8),
+                const Text('Gasto', style: TextStyle(fontSize: 12)),
               ],
             ),
           ],
@@ -269,25 +271,25 @@ class _BudgetPageState extends State<BudgetPage> {
         .toList();
 
     if (alertasComProblema.isEmpty) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '⚠️ Alertas de Orçamento',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         ...alertasComProblema.map((entry) {
           final alert = entry.value;
           return Padding(
-            padding: EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Card(
               color: alert.cor.withOpacity(0.1),
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -296,7 +298,7 @@ class _BudgetPageState extends State<BudgetPage> {
                       children: [
                         Text(
                           alert.categoria,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${alert.percentualUsado.toStringAsFixed(0)}%',
@@ -307,7 +309,7 @@ class _BudgetPageState extends State<BudgetPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
@@ -317,15 +319,15 @@ class _BudgetPageState extends State<BudgetPage> {
                         valueColor: AlwaysStoppedAnimation<Color>(alert.cor),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       'R\$ ${alert.gastoAtual.toStringAsFixed(2)} de R\$ ${alert.limite.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       alert.mensagem,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
@@ -335,7 +337,7 @@ class _BudgetPageState extends State<BudgetPage> {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -344,21 +346,21 @@ class _BudgetPageState extends State<BudgetPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '💡 Sugestões de Orçamento',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         ...budgetService.suggestions.take(5).map((sugestao) {
           final jaTemOrcamento = budgetService.budgets.containsKey(
             sugestao.categoria,
           );
 
           return Padding(
-            padding: EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Card(
               child: Padding(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -370,12 +372,12 @@ class _BudgetPageState extends State<BudgetPage> {
                           children: [
                             Text(
                               sugestao.categoria,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
                               'Gasto médio: R\$ ${sugestao.gastoMedio.toStringAsFixed(2)}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
                               ),
@@ -384,7 +386,7 @@ class _BudgetPageState extends State<BudgetPage> {
                         ),
                         Text(
                           'R\$ ${sugestao.sugeridoMensal.toStringAsFixed(2)}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF6B63FF),
@@ -392,7 +394,7 @@ class _BudgetPageState extends State<BudgetPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -404,13 +406,13 @@ class _BudgetPageState extends State<BudgetPage> {
                                   listen: false,
                                 ).aceitarSugestao(sugestao);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('✅ Orçamento salvo!')),
+                                  const SnackBar(content: Text('✅ Orçamento salvo!')),
                                 );
                               },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: jaTemOrcamento
                               ? Colors.grey.shade300
-                              : Color(0xFF6B63FF),
+                              : const Color(0xFF6B63FF),
                         ),
                         child: Text(
                           jaTemOrcamento
@@ -427,7 +429,7 @@ class _BudgetPageState extends State<BudgetPage> {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -437,7 +439,7 @@ class _BudgetPageState extends State<BudgetPage> {
     BuildContext context,
   ) {
     if (budgetService.budgets.isEmpty) {
-      return Center(
+      return const Center(
         child: Column(
           children: [
             Icon(Icons.wallet, size: 48, color: Colors.grey),
@@ -454,35 +456,35 @@ class _BudgetPageState extends State<BudgetPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           '📋 Orçamentos Definidos',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         ...budgetService.budgets.entries.map((entry) {
           final categoria = entry.key;
           final limite = entry.value;
           final alert = budgetService.alerts[categoria];
 
           return Padding(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             child: ListTile(
               title: Text(categoria),
               subtitle: Text('Limite: R\$ ${limite.toStringAsFixed(2)}'),
               trailing: IconButton(
-                icon: Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () async {
                   await Provider.of<BudgetService>(
                     context,
                     listen: false,
                   ).removerOrcamento(categoria);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('✅ Orçamento removido')),
+                    const SnackBar(content: Text('✅ Orçamento removido')),
                   );
                 },
               ),
               leading: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: alert?.cor.withOpacity(0.2) ?? Colors.blue.shade100,
                   shape: BoxShape.circle,
@@ -500,7 +502,7 @@ class _BudgetPageState extends State<BudgetPage> {
               ),
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

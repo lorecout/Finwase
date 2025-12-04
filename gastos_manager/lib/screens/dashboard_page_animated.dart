@@ -50,7 +50,7 @@ class _DashboardPageAnimatedState extends State<DashboardPageAnimated> {
                       style: DesignSystem.titleStyle.copyWith(fontSize: 28),
                     ),
                     const SizedBox(height: 8),
-                    Text(
+                    const Text(
                       'Aqui está um resumo das suas finanças',
                       style: DesignSystem.bodyStyle,
                     ),

@@ -160,7 +160,7 @@ class _BulkTransactionsPageState extends State<BulkTransactionsPage>
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
-                        value: formData.tipo,
+                        initialValue: formData.tipo,
                         decoration: const InputDecoration(
                           labelText: 'Tipo',
                           border: OutlineInputBorder(),
@@ -182,7 +182,7 @@ class _BulkTransactionsPageState extends State<BulkTransactionsPage>
                       Consumer<AppState>(
                         builder: (context, appState, child) {
                           return DropdownButtonFormField<String>(
-                            value: formData.categoriaId,
+                            initialValue: formData.categoriaId,
                             decoration: const InputDecoration(
                               labelText: 'Categoria',
                               border: OutlineInputBorder(),

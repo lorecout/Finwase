@@ -134,7 +134,7 @@ class ThemeSettingsPage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         'Escolha uma cor para personalizar o tema:',
                         style: TextStyle(fontSize: 16),
@@ -150,7 +150,7 @@ class ThemeSettingsPage extends StatelessWidget {
                           color: Colors.orange,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Text(
+                        child: const Text(
                           'PREMIUM',
                           style: TextStyle(
                             color: Colors.white,
@@ -235,7 +235,7 @@ class ThemeSettingsPage extends StatelessWidget {
                                   color: Colors.black.withValues(alpha: 0.5),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.lock,
                                   color: Colors.white,
                                   size: 20,
@@ -258,7 +258,7 @@ class ThemeSettingsPage extends StatelessWidget {
                         backgroundColor: Colors.orange,
                         foregroundColor: Colors.white,
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.star, size: 20),
@@ -307,7 +307,7 @@ class ThemeSettingsPage extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -318,14 +318,14 @@ class ThemeSettingsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             Icon(Icons.lock, color: Colors.orange),
             SizedBox(width: 8),
             Text('Recurso Premium'),
           ],
         ),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -347,7 +347,7 @@ class ThemeSettingsPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Fechar'),
+            child: const Text('Fechar'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -361,7 +361,7 @@ class ThemeSettingsPage extends StatelessWidget {
               backgroundColor: Colors.orange,
               foregroundColor: Colors.white,
             ),
-            child: Text('Upgrade'),
+            child: const Text('Upgrade'),
           ),
         ],
       ),
@@ -375,7 +375,7 @@ class ThemeSettingsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             Icon(Icons.star, color: Colors.orange),
             SizedBox(width: 8),
@@ -386,19 +386,19 @@ class ThemeSettingsPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Desbloqueie todos os recursos premium!',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
-              child: Column(
+              child: const Column(
                 children: [
                   Row(
                     children: [
@@ -434,8 +434,8 @@ class ThemeSettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Por apenas R\$ 9,90/mês',
               style: TextStyle(
                 fontSize: 18,
@@ -449,7 +449,7 @@ class ThemeSettingsPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Talvez depois'),
+            child: const Text('Talvez depois'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -461,7 +461,7 @@ class ThemeSettingsPage extends StatelessWidget {
               backgroundColor: Colors.orange,
               foregroundColor: Colors.white,
             ),
-            child: Text('Assinar Premium'),
+            child: const Text('Assinar Premium'),
           ),
         ],
       ),

@@ -469,7 +469,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       }
 
                       return DropdownButtonFormField<Categoria>(
-                        value: _categoriaSelecionada,
+                        initialValue: _categoriaSelecionada,
                         decoration: InputDecoration(
                           labelText: 'Categoria',
                           prefixIcon: const Icon(Icons.category),
@@ -563,7 +563,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                           if (_isRecorrente) ...[
                             const SizedBox(height: 8),
                             DropdownButtonFormField<RecurringType>(
-                              value: _tipoRecorrencia,
+                              initialValue: _tipoRecorrencia,
                               decoration: InputDecoration(
                                 labelText: 'Frequência',
                                 prefixIcon: const Icon(Icons.repeat),

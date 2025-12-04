@@ -199,34 +199,34 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(AppConstants.changePassword),
+      title: const Text(AppConstants.changePassword),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _currentPasswordController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: AppConstants.currentPassword,
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _newPasswordController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: AppConstants.newPassword,
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _confirmPasswordController,
             obscureText: true,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: AppConstants.confirmPassword,
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(),
             ),
           ),
         ],
@@ -234,11 +234,11 @@ class _ChangePasswordDialogState extends State<_ChangePasswordDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(AppConstants.cancel),
+          child: const Text(AppConstants.cancel),
         ),
         ElevatedButton(
           onPressed: _validateAndSubmit,
-          child: Text(AppConstants.changePasswordSetting),
+          child: const Text(AppConstants.changePasswordSetting),
         ),
       ],
     );

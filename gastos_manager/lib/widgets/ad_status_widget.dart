@@ -6,7 +6,7 @@ import '../services/premium_service.dart';
 
 /// Widget para mostrar status detalhado do sistema de anúncios
 class AdStatusWidget extends StatefulWidget {
-  const AdStatusWidget({Key? key}) : super(key: key);
+  const AdStatusWidget({super.key});
 
   @override
   State<AdStatusWidget> createState() => _AdStatusWidgetState();

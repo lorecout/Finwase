@@ -80,7 +80,7 @@ class SupportSettingsSection extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: Text(AppConstants.helpCenter)),
+          appBar: AppBar(title: const Text(AppConstants.helpCenter)),
           body: const Center(
             child: Text('Central de Ajuda em desenvolvimento'),
           ),

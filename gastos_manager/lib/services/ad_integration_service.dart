@@ -62,7 +62,7 @@ class AdIntegrationService {
   Future<Map<String, dynamic>> getPerformanceStats() async {
     if (!_isInitialized) return {};
 
-    return await _optimizer.getPerformanceStats();
+    return _optimizer.getPerformanceStats();
   }
 
   /// Reset para testes
@@ -121,7 +121,7 @@ mixin AdIntegrationMixin<T extends StatefulWidget> on State<T> {
 
 /// Widget para exibir estatísticas de anúncios (para debug/admin)
 class AdPerformanceWidget extends StatelessWidget {
-  const AdPerformanceWidget({Key? key}) : super(key: key);
+  const AdPerformanceWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

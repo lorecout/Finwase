@@ -221,19 +221,19 @@ class DataSettingsSection extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppConstants.exportData),
-        content: Text(AppConstants.exportFormatQuestion),
+        title: const Text(AppConstants.exportData),
+        content: const Text(AppConstants.exportFormatQuestion),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppConstants.cancel),
+            child: const Text(AppConstants.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               SnackBarUtils.showInfo(context, AppConstants.exportingCsv);
             },
-            child: Text(AppConstants.csv),
+            child: const Text(AppConstants.csv),
           ),
           if (premiumService.isPremium)
             ElevatedButton(
@@ -241,7 +241,7 @@ class DataSettingsSection extends StatelessWidget {
                 Navigator.pop(context);
                 SnackBarUtils.showInfo(context, AppConstants.exportingPdf);
               },
-              child: Text(AppConstants.pdf),
+              child: const Text(AppConstants.pdf),
             ),
         ],
       ),

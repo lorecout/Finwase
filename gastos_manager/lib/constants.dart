@@ -1,5 +1,6 @@
 /// Constantes da aplicação
 /// Centraliza todas as strings, mensagens e valores constantes
+library;
 
 class AppConstants {
   // === MENSAGENS DE SUCESSO ===

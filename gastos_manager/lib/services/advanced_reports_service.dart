@@ -247,7 +247,7 @@ class AdvancedReportsService {
       final categoryName = categories
           .firstWhere(
             (c) => c.id == transaction.categoryId,
-            orElse: () => CategoryModel(
+            orElse: () => const CategoryModel(
               id: 'unknown',
               name: 'Desconhecida',
               icon: 'help',

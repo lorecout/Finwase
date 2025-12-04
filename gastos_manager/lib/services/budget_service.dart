@@ -234,7 +234,7 @@ class BudgetService extends ChangeNotifier {
           .doc(userId)
           .collection('budgets')
           .doc('config')
-          .update({'$categoria': FieldValue.delete()});
+          .update({categoria: FieldValue.delete()});
 
       debugPrint('✅ BUDGET: Orçamento removido para $categoria');
       notifyListeners();

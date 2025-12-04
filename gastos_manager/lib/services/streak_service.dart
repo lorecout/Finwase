@@ -74,9 +74,7 @@ class StreakService extends ChangeNotifier {
 
     if (streakContinues) {
       _currentStreak += 1;
-      if (_streakStartDate == null) {
-        _streakStartDate = todayDate;
-      }
+      _streakStartDate ??= todayDate;
     } else {
       // Sequência quebrou
       if (_currentStreak > _bestStreak) {
@@ -128,15 +126,15 @@ class StreakService extends ChangeNotifier {
     if (_currentStreak == 0) {
       return '🚀 Comece sua jornada hoje! Primeira atividade = primeiro passo.';
     } else if (_currentStreak < 7) {
-      return '💪 Você está crescendo! ${_currentStreak} dias - falta pouco para a primeira semana!';
+      return '💪 Você está crescendo! $_currentStreak dias - falta pouco para a primeira semana!';
     } else if (_currentStreak < 30) {
-      return '🔥 Sequência incrível! ${_currentStreak} dias - continue assim!';
+      return '🔥 Sequência incrível! $_currentStreak dias - continue assim!';
     } else if (_currentStreak < 100) {
-      return '⚡ Você é uma máquina! ${_currentStreak} dias já - rumo ao centesimal!';
+      return '⚡ Você é uma máquina! $_currentStreak dias já - rumo ao centesimal!';
     } else if (_currentStreak < 365) {
-      return '👑 Lendário! ${_currentStreak} dias - quase um ano invicto!';
+      return '👑 Lendário! $_currentStreak dias - quase um ano invicto!';
     } else {
-      return '🌟 MESTRE DOS HÁBITOS! ${_currentStreak} dias consecutivos!';
+      return '🌟 MESTRE DOS HÁBITOS! $_currentStreak dias consecutivos!';
     }
   }
 

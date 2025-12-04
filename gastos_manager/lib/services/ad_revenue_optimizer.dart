@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/foundation.dart';
 import 'ad_service.dart';
@@ -365,11 +364,10 @@ class AdRevenueOptimizer {
     return _performanceData.map(
       (key, value) => MapEntry(key, {
         'fillRate': value.requests > 0
-            ? (value.successes / value.requests * 100).toStringAsFixed(1) + '%'
+            ? '${(value.successes / value.requests * 100).toStringAsFixed(1)}%'
             : '0%',
         'engagementRate': value.successes > 0
-            ? (value.engagements / value.successes * 100).toStringAsFixed(1) +
-                  '%'
+            ? '${(value.engagements / value.successes * 100).toStringAsFixed(1)}%'
             : '0%',
         'totalRequests': value.requests,
         'totalSuccesses': value.successes,
