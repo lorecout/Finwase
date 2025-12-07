@@ -1,5 +1,6 @@
 /// Exemplo de como usar o PlayIntegrityService
 /// Adicione este código no seu main.dart ou em um provider de inicialização
+library;
 
 import 'package:gastos_manager/services/play_integrity_service.dart';
 

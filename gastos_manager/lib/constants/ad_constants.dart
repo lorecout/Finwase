@@ -1,6 +1,7 @@
 /// Constantes de Monetização - AdMob e In-App Purchases
 ///
 /// ⚠️ IMPORTANTE: Substitua os valores de exemplo pelos IDs reais do seu console
+library;
 
 class AdConstants {
   // ============================================
@@ -9,7 +10,7 @@ class AdConstants {
 
   /// ID do App no Google AdMob
   /// Obtenha em: https://admob.google.com > Configurações do App
-  static const String admobAppId = 'ca-app-pub-2473407367~1234567890';
+  static const String admobAppId = 'ca-app-pub-6846955506912398~2473407367';
 
   // --- ANÚNCIOS BANNER ---
   /// Banner Ad Unit ID para Android
@@ -27,11 +28,15 @@ class AdConstants {
   // --- ANÚNCIOS RECOMPENSADOS ---
   /// Rewarded Ad Unit ID para Android
   /// Usuário assiste anúncio e ganha recompensa (ex: remove 1 transação)
-  static const String rewardedAdUnitId = 'ca-app-pub-3940256099942544/5224354917';
+  /// ⚠️ IMPORTANTE: Crie esta unidade no AdMob e substitua o ID abaixo
+  /// 1. Acesse: https://admob.google.com
+  /// 2. Apps > Finans > Adicionar unidade de anúncio > Recompensado
+  /// 3. Copie o ID e cole aqui
+  static const String rewardedAdUnitId = 'ca-app-pub-6846955506912398/REWARDED_ID_AQUI';
 
   /// Rewarded Interstitial Ad Unit ID
   /// Combine recompensa com interstitial
-  static const String rewardedInterstitialAdUnitId = 'ca-app-pub-3940256099942544/5354046379';
+  static const String rewardedInterstitialAdUnitId = 'ca-app-pub-6846955506912398/REWARDED_INTERSTITIAL_ID_AQUI';
 
   // ============================================
   // IN-APP PURCHASES - Produtos Premium
@@ -107,8 +112,22 @@ class AdConstants {
     if (useTestAds) {
       return 'ca-app-pub-3940256099942544/5224354917'; // ID de teste do Google
     }
-    return rewardedAdUnitId;
+    return rewardedAdUnitId; // ⚠️ Criar unidade no AdMob e atualizar ID acima
   }
+}
+
+// Atualize com seus IDs reais de produção do AdMob obtidos no console do AdMob.
+class AdConstantsProd {
+  // App-level: definido via AndroidManifest com com.google.android.gms.ads.APPLICATION_ID
+  // Unidades de anúncio:
+  static const String bannerAdUnitIdAndroid = 'ca-app-pub-6846955506912398/PROD_BANNER_ID';
+  static const String interstitialAdUnitIdAndroid = 'ca-app-pub-6846955506912398/PROD_INTERSTITIAL_ID';
+  static const String rewardedAdUnitIdAndroid = 'ca-app-pub-6846955506912398/PROD_REWARDED_ID';
+
+  // iOS (se necessário)
+  static const String bannerAdUnitIdiOS = 'ca-app-pub-6846955506912398/PROD_BANNER_ID_IOS';
+  static const String interstitialAdUnitIdiOS = 'ca-app-pub-6846955506912398/PROD_INTERSTITIAL_ID_IOS';
+  static const String rewardedAdUnitIdiOS = 'ca-app-pub-6846955506912398/PROD_REWARDED_ID_IOS';
 }
 
 /// Classe para gerenciar preços dos planos premium

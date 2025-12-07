@@ -236,7 +236,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
                     content: Text(
                       'AdMob: ${AdService.isInitialized ? 'OK' : 'Erro'} | '
                       'Status: ${_retryCount >= _maxRetries ? 'Falhou' : 'Tentando'} | '
-                      'ID: ${AdService.bannerAdUnitId}',
+                      'ID: ${AdService.getAdStatus()['bannerAdUnitId']}',
                     ),
                     duration: const Duration(seconds: 3),
                   ),

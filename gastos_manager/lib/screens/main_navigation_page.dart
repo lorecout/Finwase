@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../services/ad_service.dart';
+import '../services/ad_revenue_optimizer.dart';
 import '../services/theme_service.dart';
 import 'dashboard_page_clean.dart';
 import 'transactions_page.dart';
@@ -82,17 +84,34 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
           floatingActionButton: (_selectedIndex == 1 || _selectedIndex == 5)
               ? null
-              : FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/add-transaction');
+              : GestureDetector(
+                  onLongPress: () async {
+                    await _triggerInterstitialTest();
                   },
-                  backgroundColor: themeService.accentColor,
-                  heroTag: "main_add_fab",
-                  child: const Icon(Icons.add, color: Colors.white),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/add-transaction');
+                    },
+                    backgroundColor: themeService.accentColor,
+                    heroTag: "main_add_fab",
+                    child: const Icon(Icons.add, color: Colors.white),
+                  ),
                 ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },
     );
+  }
+
+  Future<void> _triggerInterstitialTest() async {
+    if (!mounted) return;
+    if (!AdService.isInitialized) {
+      await AdService.initialize();
+    }
+    final ad = await AdRevenueOptimizer().createOptimizedInterstitial(
+      onAdLoaded: (ad) {},
+      onAdFailedToLoad: (error) {},
+    );
+    ad?.show();
   }
 }

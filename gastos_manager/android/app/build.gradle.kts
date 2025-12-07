@@ -86,6 +86,13 @@ android {
             // Shrink unused resources to reduce APK size
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            
+            // Desabilitar strip de bibliotecas nativas (workaround para toolchain incompleto)
+            packaging {
+                jniLibs {
+                    keepDebugSymbols += listOf("**/*.so")
+                }
+            }
         }
     }
 }

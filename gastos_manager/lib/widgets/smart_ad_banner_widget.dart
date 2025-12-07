@@ -127,8 +127,6 @@ class _SmartAdBannerWidgetState extends State<SmartAdBannerWidget> {
           }
         }
       },
-      adUnitIdOverride: _currentBannerId,
-      sizeOverride: sizeOverride,
     );
 
     _bannerAd?.load();
