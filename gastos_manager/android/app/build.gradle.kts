@@ -82,17 +82,26 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true
-            // Shrink unused resources to reduce APK size
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            
-            // Desabilitar strip de bibliotecas nativas (workaround para toolchain incompleto)
+            isMinifyEnabled = false
+            // Shrink unused resources desabilitado para evitar erro de strip
+            isShrinkResources = false
+            // ProGuard desabilitado temporariamente
+            // proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            // Desabilitar completamente o strip de símbolos nativos
             packaging {
                 jniLibs {
                     keepDebugSymbols += listOf("**/*.so")
+                    useLegacyPackaging = true
                 }
             }
+        }
+    }
+    
+    // Configuração para desabilitar stripping no bundle
+    androidComponents {
+        onVariants(selector().withBuildType("release")) { variant ->
+            variant.packaging.jniLibs.keepDebugSymbols.add("**/*.so")
         }
     }
 }
@@ -103,6 +112,10 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+
+    // AndroidX Core para Edge-to-Edge (Android 15+)
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.activity:activity-ktx:1.9.3")
 
     // Google Play Services dependencies
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
