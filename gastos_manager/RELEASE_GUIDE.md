@@ -109,7 +109,7 @@ Verificar em `android/app/src/main/AndroidManifest.xml`:
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.finwise">
+    package="com.lorecout.finwise">
     
     <application
         android:label="FinWise"
