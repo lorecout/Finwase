@@ -1,4 +1,11 @@
 # Project-level configuration.
+###############################################################
+# ATENÇÃO: Este arquivo contém regras críticas para build Linux.
+# - Não altere variáveis de caminho sem revisar dependências.
+# - Sempre use modo Debug para depuração (AOT não incluso).
+# - O executável final está em intermediates_do_not_run.
+# - Use o bundle gerado para rodar o app corretamente.
+###############################################################
 cmake_minimum_required(VERSION 3.13)
 project(runner LANGUAGES CXX)
 
@@ -15,6 +22,7 @@ cmake_policy(SET CMP0063 NEW)
 
 # Load bundled libraries from the lib/ directory relative to the binary.
 set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
+# Garante que libs dinâmicas sejam encontradas no bundle.
 
 # Root filesystem for cross-building.
 if(FLUTTER_TARGET_PLATFORM_SYSROOT)
@@ -24,6 +32,7 @@ if(FLUTTER_TARGET_PLATFORM_SYSROOT)
   set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
   set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
   set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+  # Ajuste para cross-compiling. Não altere sem necessidade.
 endif()
 
 # Define build configuration options.
@@ -32,18 +41,23 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     STRING "Flutter build mode" FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
     "Debug" "Profile" "Release")
+  # Debug é o padrão para evitar builds otimizados acidentalmente.
 endif()
 
 # Compilation settings that should be applied to most targets.
 #
 # Be cautious about adding new options here, as plugins use this function by
 # default. In most cases, you should add new options to specific targets instead
+# -Werror só é aplicado fora do Debug para evitar travar builds de desenvolvimento.
 # of modifying this function.
 function(APPLY_STANDARD_SETTINGS TARGET)
   target_compile_features(${TARGET} PUBLIC cxx_std_14)
-  target_compile_options(${TARGET} PRIVATE -Wall -Werror)
+  # Adiciona todos os warnings, mas só transforma em erro fora do Debug
+  target_compile_options(${TARGET} PRIVATE -Wall)
+  target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-Werror>")
   target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
   target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
+  # -Werror removido do Debug para evitar falhas desnecessárias durante desenvolvimento
 endfunction()
 
 # Flutter library and tool build rules.

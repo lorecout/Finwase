@@ -1,0 +1,23 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_const_literals_to_create_immutables: true
+    avoid_print: true
+    unnecessary_to_list_in_spreads: true
+    prefer_final_fields: true
+    sort_child_properties_last: true
+    use_build_context_synchronously: true
+    curly_braces_in_flow_control_structures: true
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

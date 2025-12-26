@@ -1,37 +1,86 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Open Ollama UI",
-      "type": "shell",
-      "command": "start http://127.0.0.1:11434",
-      "problemMatcher": [],
-      "group": {
-        "kind": "none",
-        "isDefault": false
-      }
-    },
-    {
-      "label": "Start Ollama Serve",
-      "type": "shell",
-      "command": "\"C:\\Users\\Lorena\\AppData\\Local\\Programs\\Ollama\\ollama.exe\" serve",
-      "isBackground": true,
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Run Ollama Test (gemma3)",
-      "type": "shell",
-      "command": "\"C:\\Users\\Lorena\\AppData\\Local\\Programs\\Ollama\\ollama.exe\" run gemma3 \"Teste rápido: confirme se está pronto\" --keepalive 30s",
-      "problemMatcher": [],
-      "group": "test"
-    },
-    {
-      "label": "Executar app no emulador",
-      "type": "shell",
-      "command": "flutter run",
-      "args": [],
-      "isBackground": false
-    }
-  ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Open Ollama UI",
+			"type": "shell",
+			"command": "start http://127.0.0.1:11434",
+			"problemMatcher": [],
+			"group": {
+				"kind": "none",
+				"isDefault": false
+			}
+		},
+		{
+			"label": "Start Ollama Serve",
+			"type": "shell",
+			"command": "\"C:\\Users\\Lorena\\AppData\\Local\\Programs\\Ollama\\ollama.exe\" serve",
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "build"
+		},
+		{
+			"label": "Run Ollama Test (gemma3)",
+			"type": "shell",
+			"command": "\"C:\\Users\\Lorena\\AppData\\Local\\Programs\\Ollama\\ollama.exe\" run gemma3 \"Teste rápido: confirme se está pronto\" --keepalive 30s",
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		},
+		{
+			"label": "Executar app no emulador",
+			"type": "shell",
+			"command": "flutter run",
+			"args": [],
+			"isBackground": false
+		}
+	]
 }

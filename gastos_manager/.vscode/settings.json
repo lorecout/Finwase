@@ -8,4 +8,7 @@
   "terminal.integrated.enablePersistentSessions": true,
   "CodeGPT.apiKey": "Ollama",
   "cmake.sourceDirectory": "C:/Users/Lorena/StudioProjects/Finwase/gastos_manager/linux"
+  ,
+  "java.home": "C:/Program Files/Eclipse Adoptium/jdk-17.0.17.10-hotspot",
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

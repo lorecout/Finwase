@@ -1,0 +1,48 @@
+// build.gradle padrão para app Flutter com Firebase
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.google-services'
+
+android {
+    namespace 'com.lorecout.finwise'
+    compileSdkVersion project.hasProperty('compileSdkVersion') ? project.compileSdkVersion.toInteger() : 36
+
+    defaultConfig {
+        applicationId "com.lorecout.finwise" // Altere para com.lorecout.finansapp se necessário
+        minSdkVersion project.hasProperty('minSdkVersion') ? project.minSdkVersion.toInteger() : 24
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? project.targetSdkVersion.toInteger() : 36
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildTypes {
+        release {
+            // signingConfig signingConfigs.release // Removido pois não há bloco signingConfigs
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            // signingConfig signingConfigs.debug // Removido pois não há bloco signingConfigs
+        }
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+    implementation 'com.google.firebase:firebase-analytics:23.0.0'
+    implementation 'com.google.firebase:firebase-auth:24.0.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
+
+// Certifique-se de que o google-services.json está em android/app
+// O login Google foi removido. Apenas login/senha e recuperação de senha estão ativos.
+// Recursos antes restritos pelo login Google agora estão liberados, exceto cadastro/login/recuperação de senha.
+// Anúncios devem ser exibidos normalmente para todos os usuários.

@@ -47,5 +47,9 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+
+		<!-- AdMob App ID (produção) -->
+		<key>GADApplicationIdentifier</key>
+		<string>ca-app-pub-6846955506912398~2473407367</string>
 	</dict>
 </plist>

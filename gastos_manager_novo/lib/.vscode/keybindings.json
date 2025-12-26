@@ -1,0 +1,27 @@
+[
+  {
+    "key": "alt+\\",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorTextFocus && !editorHasSelection && !inlineSuggestionsVisible"
+  },
+  {
+    "key": "ctrl+shift+c",
+    "command": "codeium.openChatView",
+    "when": "isMac || isWindows"
+  },
+  {
+    "key": "ctrl+alt+o",
+    "command": "codeium.openChatInPane",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "alt+[",
+    "command": "codeium.showPreviousCompletion",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+]",
+    "command": "codeium.showNextCompletion",
+    "when": "editorTextFocus && !editorReadonly"
+  }
+]
