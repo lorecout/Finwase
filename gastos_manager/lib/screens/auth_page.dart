@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import '../services/app_state.dart';
 import '../services/firebase_service.dart';
 import '../utils/design_system.dart';
-import '../services/theme_service.dart';
-import '../services/premium_service.dart';
+import '../widgets/safe_asset_image.dart';
+import '../main.dart'; // importar appNavigatorKey
 
 /// Página de autenticação simplificada e robusta
 class AuthPage extends StatefulWidget {
@@ -24,7 +24,14 @@ class _AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
-    _firebaseService = FirebaseService();
+    try {
+      debugPrint('AuthPage: initState start');
+      _firebaseService = FirebaseService();
+      debugPrint('AuthPage: initState completed');
+    } catch (e, st) {
+      debugPrint('AuthPage: initState error: $e');
+      debugPrint(st.toString());
+    }
   }
 
   Future<void> _continueAsGuest() async {
@@ -37,15 +44,14 @@ class _AuthPageState extends State<AuthPage> {
       // IMPORTANTE: Fazer logout primeiro para garantir modo visitante real
       await FirebaseAuth.instance.signOut();
 
-      // Limpar cache do Google Sign-In também
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      await googleSignIn.signOut();
+      if (!mounted) return;
 
       final appState = Provider.of<AppState>(context, listen: false);
       appState.setGuestMode(true);
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/main');
+        // Navegar usando a chave global para evitar erros de rota
+        appNavigatorKey.currentState?.pushReplacementNamed('/main');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Modo visitante ativado - Dados não serão salvos'),
@@ -65,6 +71,17 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  /// Login com Google
+  /// 
+  /// Processa:
+  /// 1. Inicia sign-in com Google
+  /// 2. Cria/atualiza perfil do usuário
+  /// 3. Navega para home
+  /// 
+  /// Tratamento de erros:
+  /// - CANCELLED: Usuário fechou o dialog
+  /// - Network: Sem conexão
+  /// - Outros: Exibe mensagem de erro
   Future<void> _signInWithGoogle() async {
     setState(() {
       _isLoading = true;
@@ -72,89 +89,46 @@ class _AuthPageState extends State<AuthPage> {
     });
 
     try {
-      // Criar instância do Google Sign-In
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      debugPrint('🔐 AUTH PAGE: Iniciando Google Sign-In...');
+      final firebaseService = FirebaseService();
+      final userCredential = await firebaseService.signInWithGoogle();
 
-      // Garanti que o seletor de contas apareça sempre em novo teste.
-      // Em alguns casos o GoogleSignIn reutiliza a sessão anterior e não exibe a UI.
-      // O signOut aqui força a escolha de conta e evita estados inconsistentes no emulador.
-      try {
-        await googleSignIn.signOut();
-      } catch (_) {
-        // Ignorar erros de signOut para não impactar o fluxo de login
-      }
-
-      // Fazer login com Google
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-      if (googleUser == null) {
+      if (userCredential == null) {
         // Usuário cancelou o login
+        debugPrint('⚠️ AUTH PAGE: Google Sign-In cancelado pelo usuário');
         setState(() {
-          _isLoading = false;
+          _errorMessage = 'Login cancelado. Tente novamente ou entre como visitante.';
         });
         return;
       }
 
-      // Obter credenciais de autenticação
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      if (!mounted) return;
 
-      // Criar credencial do Firebase
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      debugPrint('✅ AUTH PAGE: Login sucesso - UID: ${userCredential.user?.uid}');
+      final appState = Provider.of<AppState>(context, listen: false);
+      appState.setGuestMode(false);
 
-      // Fazer login no Firebase
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
-
-      debugPrint(
-        '🔐 AUTH: Login realizado com sucesso para: ${userCredential.user!.email}',
-      );
-      debugPrint('🔐 AUTH: UID do usuário: ${userCredential.user!.uid}');
-
-      // Criar perfil do usuário no Firestore
-      debugPrint('👤 AUTH: Criando perfil no Firestore...');
-      await _firebaseService.createUserProfile(userCredential.user!);
-
-      // Atualizar displayName se necessário
-      debugPrint('📝 AUTH: Atualizando displayName se necessário...');
-      await _firebaseService.updateDisplayNameIfNeeded();
-
-      // Carregar dados do usuário no PremiumService
-      final premiumService = Provider.of<PremiumService>(
-        context,
-        listen: false,
-      );
-      await premiumService.loadUserData();
-
-      // Atualizar último login
-      debugPrint('🔄 AUTH: Atualizando último login...');
-      await _firebaseService.updateLastLogin();
-
-      if (mounted) {
-        // Navegar primeiro
-        Navigator.pushReplacementNamed(context, '/main');
-
-        // Mostrar SnackBar em um callback separado para evitar conflito
-        Future.delayed(const Duration(milliseconds: 100), () {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Bem-vindo, ${userCredential.user!.displayName ?? 'Usuário'}!',
-                ),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        });
+      // Navegar com a chave global
+      appNavigatorKey.currentState?.pushReplacementNamed('/main');
+    } on FirebaseException catch (e) {
+      debugPrint('❌ AUTH PAGE: Erro Firebase - ${e.code}: ${e.message}');
+      String errorMsg = 'Erro ao fazer login com Google';
+      
+      if (e.code == 'network-request-failed') {
+        errorMsg = 'Sem conexão com internet. Verifique sua conexão.';
+      } else if (e.code == 'sign_in_failed') {
+        errorMsg = 'Falha no login. Tente novamente.';
+      } else if (e.code == 'account-exists-with-different-credential') {
+        errorMsg = 'Uma conta com este email já existe.';
       }
-    } catch (e) {
+      
       setState(() {
-        _errorMessage = 'Erro ao fazer login com Google: ${e.toString()}';
+        _errorMessage = errorMsg;
+      });
+    } catch (e) {
+      debugPrint('❌ AUTH PAGE: Erro inesperado - ${e.toString()}');
+      setState(() {
+        _errorMessage = 'Erro inesperado ao fazer login com Google. Tente novamente.';
       });
     } finally {
       setState(() {
@@ -165,110 +139,227 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<ThemeService>(
-        builder: (context, themeService, child) {
-          return DesignSystem.buildAnimatedBackground(
-            baseColor: themeService.accentColor,
-            child: SafeArea(
+    debugPrint('AuthPage: build start');
+    try {
+      return Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF4F8CFF), Color(0xFFB6E0FE)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Título com efeito de digitação
-                    Center(
-                      child: DesignSystem.buildTypingText(
-                        text: 'FinWise',
-                        style: DesignSystem.subtitleStyle,
-                      ),
+                child: Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Controle suas finanças pessoais',
-                      style: DesignSystem.bodyStyle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 48),
-
-                    // Mensagem de erro
-                    if (_errorMessage != null)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.red.withValues(alpha: 0.1),
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-
-                    if (_errorMessage != null) const SizedBox(height: 16),
-
-                    // Botão Visitante
-                    DesignSystem.buildStyledButton(
-                      text: 'Continuar como Visitante',
-                      onPressed: _continueAsGuest,
-                      isLoading: _isLoading,
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // Divisor
-                    Row(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(
-                          child: Divider(
-                            color: Colors.white.withValues(alpha: 0.3),
-                          ),
+                        // Ícone do app
+                        // Fallback seguro para asset do ícone do app
+                        Builder(
+                            builder: (context) {
+                              try {
+                                return SafeAssetImage(
+                                  'assets/icon/app_icon.png',
+                                  height: 64,
+                                  fallbackAsset: null,
+                                );
+                              } catch (e) {
+                                debugPrint('Erro ao carregar app_icon.png: $e');
+                                return const Icon(
+                                  Icons.account_circle,
+                                  size: 64,
+                                  color: Colors.grey,
+                                );
+                              }
+                            },
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                        const SizedBox(height: 16),
+                        // Título estilizado
+                        Center(
                           child: Text(
-                            'OU',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.7),
+                            'FinWise',
+                            style: DesignSystem.titleStyle.copyWith(
+                              color: const Color(0xFF1A237E),
                               fontWeight: FontWeight.bold,
+                              fontSize: 32,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.white.withValues(alpha: 0.3),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Controle suas finanças pessoais',
+                          style: TextStyle(
+                            color: Color(0xFF374151),
+                            fontSize: 16,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Mensagem de erro
+                        if (_errorMessage != null)
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _errorMessage!,
+                                    style: const TextStyle(color: Colors.red),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _errorMessage = null;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (_errorMessage != null) const SizedBox(height: 16),
+
+                        // Botão de login com Google
+                        ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _signInWithGoogle,
+                          icon: Builder(
+                            builder: (context) {
+                              try {
+                                return const SafeAssetImage(
+                                  'assets/icon/google_icon.png',
+                                  height: 24,
+                                  fallbackAsset: null,
+                                );
+                              } catch (e) {
+                                debugPrint(
+                                  'Erro ao carregar google_icon.png: $e',
+                                );
+                                return const Icon(
+                                  Icons.login,
+                                  size: 24,
+                                  color: Colors.grey,
+                                );
+                              }
+                            },
+                          ),
+                          label: const Text('Entrar com Google'),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF1A237E),
+                            elevation: 4,
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
                           ),
                         ),
+                        const SizedBox(height: 16),
+
+                        // Botão de modo visitante
+                        OutlinedButton.icon(
+                          onPressed: _isLoading ? null : _continueAsGuest,
+                          icon: const Icon(
+                            Icons.person_outline,
+                            color: Color(0xFF1A237E),
+                          ),
+                          label: const Text('Continuar como Visitante'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            side: const BorderSide(
+                              color: Color(0xFF1A237E),
+                              width: 2,
+                            ),
+                            foregroundColor: const Color(0xFF1A237E),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Indicador de carregamento
+                        if (_isLoading)
+                          const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF1A237E),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
-
-                    const SizedBox(height: 16),
-
-                    // Botão Login com Google
-                    DesignSystem.buildStyledOutlineButton(
-                      text: 'Continuar com Google',
-                      onPressed: _signInWithGoogle,
-                      isLoading: _isLoading,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Versão
-                    Text(
-                      'Versão 1.0.0',
-                      style: DesignSystem.captionStyle.copyWith(fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          );
-        },
-      ),
-    );
+          ),
+        ),
+      );
+    } catch (e, st) {
+      debugPrint('AuthPage: build error: $e');
+      debugPrint(st.toString());
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                const SizedBox(height: 12),
+                const Text(
+                  'Erro ao renderizar tela de login',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(e.toString(), textAlign: TextAlign.center),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () {
+                    if (mounted) setState(() {});
+                  },
+                  child: const Text('Tentar novamente'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

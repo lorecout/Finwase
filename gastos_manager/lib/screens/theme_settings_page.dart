@@ -193,6 +193,7 @@ class ThemeSettingsPage extends StatelessWidget {
                           isPremium || isBlueDefault,
                         );
                         if (!success && !isBlueDefault) {
+                          // ignore: use_build_context_synchronously
                           _showPremiumRequiredDialog(context);
                         }
                       },

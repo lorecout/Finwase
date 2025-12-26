@@ -1,0 +1,26 @@
+@echo off
+echo Instalando extensoes essenciais para Flutter...
+
+echo Instalando Dart...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension dart-code.dart-code
+
+echo Instalando Flutter...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension dart-code.flutter
+
+echo Instalando Android iOS Emulator...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension diemasmds.vscode-android-ios-emulator
+
+echo Instalando Amazon Q...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension amazonwebservices.amazon-q-vscode
+
+echo Instalando GitLens...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension eamodio.gitlens
+
+echo Instalando Error Lens...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension usernamehw.errorlens
+
+echo Instalando Material Icon Theme...
+"%LOCALAPPDATA%\Programs\Microsoft VS Code\bin\code.cmd" --install-extension pkief.material-icon-theme
+
+echo Concluido! Reinicie o VS Code.
+pause

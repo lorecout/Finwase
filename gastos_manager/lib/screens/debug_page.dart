@@ -303,13 +303,15 @@ class _DebugPageState extends State<DebugPage> {
 
   Future<void> _runAnalysis() async {
     setState(() => _isLoading = true);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
+      // (scaffoldMessenger captured above)
       final result = await _debugService.analyzeUserData();
+      if (!mounted) return;
       setState(() => _analysisResult = result);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+      if (mounted) {
+        scaffoldMessenger.showSnackBar(
           const SnackBar(
             content: Text('Análise concluída com sucesso'),
             backgroundColor: Colors.green,
@@ -318,7 +320,7 @@ class _DebugPageState extends State<DebugPage> {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('Erro na análise: $e'),
             backgroundColor: Colors.red,
@@ -360,22 +362,25 @@ class _DebugPageState extends State<DebugPage> {
     );
 
     if (confirmed != true) return;
+    if (!mounted) return;
 
     setState(() => _isLoading = true);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
-      final result = await _debugService.cleanFictitiousData();
-
-      // Limpar dados locais do AppState
+      // Capture appState before awaiting to avoid using BuildContext after await
       final appState = Provider.of<AppState>(context, listen: false);
+      final scaffoldMessenger = ScaffoldMessenger.of(context);
+      final result = await _debugService.cleanFictitiousData();
       appState.limparDados();
 
-      if (context.mounted) {
+      if (!mounted) return;
+      if (mounted) {
         if (result['success'] == true) {
           final transactionsRemoved = result['transactions_removed'] ?? 0;
           final categoriesRemoved = result['categories_removed'] ?? 0;
 
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(
                 '🧹 Limpeza de dados fictícios concluída!\n'
@@ -391,7 +396,7 @@ class _DebugPageState extends State<DebugPage> {
           // Atualizar análise após limpeza
           _runAnalysis();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(
                 'Erro na limpeza: ${result['errors']?.join(', ') ?? 'Erro desconhecido'}',
@@ -404,7 +409,7 @@ class _DebugPageState extends State<DebugPage> {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('Erro na limpeza: $e'),
             backgroundColor: Colors.red,
@@ -460,23 +465,25 @@ class _DebugPageState extends State<DebugPage> {
     );
 
     if (confirmed != true) return;
+    if (!mounted) return;
 
     setState(() => _isLoading = true);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
-      final result = await _debugService.clearAllUserData();
-
-      // Limpar dados locais do AppState
       final appState = Provider.of<AppState>(context, listen: false);
+      // (scaffoldMessenger captured above)
+      final result = await _debugService.clearAllUserData();
       appState.limparDados();
 
-      if (context.mounted) {
+      if (!mounted) return;
+      if (mounted) {
         if (result['success'] == true) {
           final transactionsRemoved = result['transactions_removed'] ?? 0;
           final categoriesRemoved = result['categories_removed'] ?? 0;
           final budgetsRemoved = result['budgets_removed'] ?? 0;
 
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(
                 '✅ LIMPEZA COMPLETA!\n'
@@ -493,7 +500,7 @@ class _DebugPageState extends State<DebugPage> {
           // Atualizar análise após limpeza
           _runAnalysis();
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+          scaffoldMessenger.showSnackBar(
             SnackBar(
               content: Text(
                 'Erro na limpeza: ${result['errors']?.join(', ') ?? 'Erro desconhecido'}',
@@ -505,8 +512,8 @@ class _DebugPageState extends State<DebugPage> {
         }
       }
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
+      if (mounted) {
+        scaffoldMessenger.showSnackBar(
           SnackBar(
             content: Text('Erro na limpeza: $e'),
             backgroundColor: Colors.red,

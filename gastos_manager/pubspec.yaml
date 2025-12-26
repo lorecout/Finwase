@@ -2,7 +2,7 @@ name: gastos_manager
 description: "Finans - Aplicativo de controle financeiro pessoal com Firebase, IA e recursos premium."
 publish_to: 'none'
 
-version: 1.0.8+10
+version: 1.0.20+23
 
 environment:
   sdk: ^3.8.1
@@ -17,48 +17,49 @@ dependencies:
   cupertino_icons: ^1.0.8
   
   # Firebase (Versões atualizadas - sem SafetyNet)
-  firebase_core: ^3.15.2
-  firebase_auth: ^5.7.0
-  cloud_firestore: ^5.6.12
-  firebase_messaging: ^15.2.10
-  firebase_storage: ^12.4.10
-  firebase_app_check: ^0.3.2+10
+  firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
+  cloud_firestore: ^6.1.1
+  firebase_messaging: ^16.1.0
+  firebase_storage: ^13.0.5
+  firebase_app_check: ^0.4.1+3
   
   # Google Sign-In
-  google_sign_in: ^6.3.0
+  google_sign_in: ^7.2.0
   
   # Banco de Dados Local
   sqflite: ^2.4.2
   path: ^1.9.1
   
-  # Gerenciamento de Estado
-  provider: ^6.1.2
+  # Gerenciamento de Estado Avançado
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.2
   
   # Armazenamento Local
   shared_preferences: ^2.5.3
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.0.0
   path_provider: ^2.1.5
   
   # Autenticação Biométrica
-  local_auth: ^2.3.0
+  local_auth: ^3.0.0
   
   # Gráficos
-  fl_chart: ^0.69.2
+  fl_chart: ^1.1.1
   
   # Notificações
-  flutter_local_notifications: ^17.2.4
+  flutter_local_notifications: ^19.5.0
   
   # Conectividade
-  connectivity_plus: ^6.1.5
+  connectivity_plus: ^7.0.0
   
   # Compartilhamento
-  share_plus: ^10.1.4
+  share_plus: ^12.0.1
   
   # WebView
   webview_flutter: ^4.13.0
   
-  # Anúncios (Versão mais recente)
-  google_mobile_ads: ^5.3.1
+  # Anúncios (Versão estável para compatibilidade)
+  google_mobile_ads: ^5.1.0
   
   # In-App Purchases
   in_app_purchase: ^3.2.3
@@ -67,29 +68,36 @@ dependencies:
   intl: ^0.20.2
   uuid: ^4.5.1
   crypto: ^3.0.6
-  file_picker: ^8.3.7
+  file_picker: ^10.3.7
   flutter_lints: ^6.0.0
+  equatable: ^2.0.5
   
   # Relatórios e PDF
   pdf: ^3.11.1
   
   # Timezone para notificações
-  timezone: ^0.9.4
-  app_attest_integrity: ^1.0.0
+  timezone: ^0.10.1
+  # app_attest_integrity removido - não usado e pode trazer SafetyNet como dependência
+
+  # Provider (compatibilidade com código existente que usa Provider/Consumer)
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
   image: ^4.5.4
+  build_runner: ^2.4.7
+  riverpod_generator: ^2.3.9
+  freezed_annotation: ^2.4.1
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon/novo-icone.png"
+  image_path: "assets/onboarding/welcome.png"
   min_sdk_android: 21
   adaptive_icon_background: "#00000000"
-  adaptive_icon_foreground: "assets/icon/novo-icone.png"
+  adaptive_icon_foreground: "assets/onboarding/welcome.png"
   remove_alpha_ios: true
   remove_existing_icons: true
   web:
@@ -102,3 +110,4 @@ flutter:
   assets:
     - assets/icon/
     - assets/store-icons/
+    - assets/onboarding/

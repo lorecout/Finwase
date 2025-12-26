@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lorecout.finwise",
+      "sha256_cert_fingerprints": [
+        "6F:97:95:EF:E3:09:3D:AB:21:66:13:AB:36:86:96:F5:9D:43:AD:28:BC:28:CF:F7:C4:0C:DD:C7:30:53:37:75"
+      ]
+    }
+  }
+]
+

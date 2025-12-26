@@ -315,11 +315,11 @@ class _PremiumUpgradePageState extends State<PremiumUpgradePage> {
   ) {
     String productId = '';
     if (planName == 'Básico') {
-      productId = 'premium_monthly_basic';
+      productId = 'premium_basic_monthly';
     } else if (planName == 'Premium') {
-      productId = 'premium_monthly';
+      productId = 'premium_premium_monthly';
     } else if (planName == 'Anual') {
-      productId = 'premium_yearly';
+      productId = 'premium_enterprise_monthly';
     }
 
     showDialog(

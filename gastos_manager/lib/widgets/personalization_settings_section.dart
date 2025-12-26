@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:gastos_manager/utils/dialog_utils.dart';
-import 'package:gastos_manager/utils/snackbar_utils.dart';
 import 'package:gastos_manager/constants.dart';
 import 'package:gastos_manager/services/settings_service.dart';
+import 'package:gastos_manager/services/biometric_service.dart';
 
 /// Widget para a seção de personalização nas configurações
 class PersonalizationSettingsSection extends StatelessWidget {
@@ -98,6 +98,7 @@ class PersonalizationSettingsSection extends StatelessWidget {
   }
 
   void _showLanguageDialog(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final selectedIndex = await DialogUtils.showSingleChoiceDialog(
       context,
       title: AppConstants.chooseLanguage,
@@ -110,11 +111,14 @@ class PersonalizationSettingsSection extends StatelessWidget {
 
     if (selectedIndex != null) {
       // TODO: Implementar mudança de idioma
-      SnackBarUtils.showSuccess(context, 'Idioma alterado com sucesso!');
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Idioma alterado com sucesso!')),
+      );
     }
   }
 
   void _showCurrencyDialog(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final selectedIndex = await DialogUtils.showSingleChoiceDialog(
       context,
       title: AppConstants.chooseCurrency,
@@ -127,7 +131,9 @@ class PersonalizationSettingsSection extends StatelessWidget {
 
     if (selectedIndex != null) {
       // TODO: Implementar mudança de moeda
-      SnackBarUtils.showSuccess(context, 'Moeda alterada com sucesso!');
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Moeda alterada com sucesso!')),
+      );
     }
   }
 
@@ -136,12 +142,16 @@ class PersonalizationSettingsSection extends StatelessWidget {
     bool value,
     SettingsService settingsService,
   ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     await settingsService.toggleNotifications(value);
-    SnackBarUtils.showInfo(
-      context,
-      value
-          ? AppConstants.notificationsEnabled
-          : AppConstants.notificationsDisabled,
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          value
+              ? AppConstants.notificationsEnabled
+              : AppConstants.notificationsDisabled,
+        ),
+      ),
     );
   }
 
@@ -150,12 +160,59 @@ class PersonalizationSettingsSection extends StatelessWidget {
     bool value,
     SettingsService settingsService,
   ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    // Se está tentando ativar, verificar suporte primeiro
+    if (value) {
+      final isSupported = await BiometricService.isDeviceSupported();
+      if (!isSupported) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Seu dispositivo não suporta autenticação biométrica',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      final canCheck = await BiometricService.canCheckBiometrics();
+      if (!canCheck) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Configure uma biometria no seu dispositivo primeiro',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // Verificar biometria antes de ativar
+      final authenticated = await BiometricService.authenticate(
+        localizedReason: 'Confirme sua biometria para ativar esta proteção',
+      );
+      if (!authenticated) {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text('Autenticação biométrica falhou'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    }
+
     await settingsService.toggleBiometric(value);
-    SnackBarUtils.showInfo(
-      context,
-      value
-          ? 'Autenticação biométrica ativada'
-          : 'Autenticação biométrica desativada',
+    scaffoldMessenger.showSnackBar(
+      SnackBar(
+        content: Text(
+          value
+              ? 'Autenticação biométrica ativada'
+              : 'Autenticação biométrica desativada',
+        ),
+      ),
     );
   }
 }

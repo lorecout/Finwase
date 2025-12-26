@@ -321,16 +321,18 @@ class AdminSettingsSection extends StatelessWidget {
   }
 
   Future<void> _clearAllUserData(BuildContext context) async {
+    // Capturar referências antes de operações assíncronas
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final appState = Provider.of<AppState>(context, listen: false);
+
     try {
       // Mostrar indicador de loading
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Limpando dados...'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Limpando dados...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
 
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
@@ -360,31 +362,24 @@ class AdminSettingsSection extends StatelessWidget {
       }
 
       // Limpar dados locais
-      if (context.mounted) {
-        final appState = Provider.of<AppState>(context, listen: false);
-        appState.limparDados();
-      }
+      appState.limparDados();
 
       // Mostrar confirmação
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('✅ Todos os dados foram removidos com sucesso!'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('✅ Todos os dados foram removidos com sucesso!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ),
+      );
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('❌ Erro ao limpar dados: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text('❌ Erro ao limpar dados: $e'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/safe_asset_image.dart';
 
 /// Utilitários para ícones adaptativos do app
 class IconUtils {
@@ -30,7 +31,13 @@ class IconUtils {
     return SizedBox(
       width: adaptiveSize,
       height: adaptiveSize,
-      child: Image.asset(assetPath, fit: fit, color: color),
+      child: SafeAssetImage(
+        assetPath,
+        width: adaptiveSize,
+        height: adaptiveSize,
+        fit: fit,
+        color: color,
+      ),
     );
   }
 
@@ -38,7 +45,7 @@ class IconUtils {
   static Widget buildLoginIcon(BuildContext context) {
     return buildAdaptiveIcon(
       context: context,
-      assetPath: 'assets/icon/novo-icone.png',
+      assetPath: 'assets/onboarding/welcome.png',
       size: 60,
       maxSize: 80,
       minSize: 50,
@@ -49,7 +56,7 @@ class IconUtils {
   static Widget buildNavigationIcon(BuildContext context) {
     return buildAdaptiveIcon(
       context: context,
-      assetPath: 'assets/icon/novo-icone.png',
+      assetPath: 'assets/onboarding/welcome.png',
       size: 24,
       maxSize: 28,
       minSize: 20,
@@ -60,7 +67,7 @@ class IconUtils {
   static Widget buildAppBarIcon(BuildContext context, {Color? color}) {
     return buildAdaptiveIcon(
       context: context,
-      assetPath: 'assets/icon/novo-icone.png',
+      assetPath: 'assets/onboarding/welcome.png',
       size: 24,
       maxSize: 28,
       minSize: 20,

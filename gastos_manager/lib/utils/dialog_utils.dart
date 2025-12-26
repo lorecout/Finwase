@@ -120,12 +120,13 @@ class DialogUtils {
                 onTap: () => setState(() => selectedValue = index),
                 child: Row(
                   children: [
-                    Radio<int>(
-                      value: index,
-                      groupValue: selectedValue,
-                      onChanged: (value) =>
-                          setState(() => selectedValue = value),
+                    Icon(
+                      selectedValue == index
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
+                    const SizedBox(width: 12),
                     Expanded(child: Text(option)),
                   ],
                 ),

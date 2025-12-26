@@ -1,4 +1,11 @@
 {
-    "terminal.integrated.shellIntegration.enabled": true,
-    "terminal.integrated.enablePersistentSessions": true
+  "deepseek.host": "http://127.0.0.1:11434",
+  "deepseek.ollamaHost": "http://127.0.0.1:11434",
+  "deepseek.ollamaOrigins": "*",
+  "deepseek.model": "gemma3",
+  "deepseek.ollama.model": "gemma3",
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.enablePersistentSessions": true,
+  "CodeGPT.apiKey": "Ollama",
+  "cmake.sourceDirectory": "C:/Users/Lorena/StudioProjects/Finwase/gastos_manager/linux"
 }

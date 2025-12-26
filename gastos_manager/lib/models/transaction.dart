@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 /// Tipos de transação (padrão)
 enum TransactionType { income, expense }
@@ -179,7 +180,7 @@ class TransactionModel {
         }
       } catch (e) {
         // Fallback para data atual se não conseguir converter
-        print(
+        debugPrint(
           '⚠️ TRANSACTION_MODEL: Erro ao converter data: $e, usando data atual',
         );
         date = DateTime.now();

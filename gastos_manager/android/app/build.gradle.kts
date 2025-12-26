@@ -17,7 +17,7 @@ plugins {
 android {
     namespace = "com.lorecout.finwise"
     compileSdk = 36
-    // Removido ndkVersion para usar versão padrão
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -110,8 +110,14 @@ flutter {
     source = "../.."
 }
 
+configurations.all {
+    // Excluir SafetyNet - deprecated e substituído por Play Integrity
+    exclude(group = "com.google.android.gms", module = "play-services-safetynet")
+    exclude(group = "com.google.firebase", module = "firebase-appcheck-safetynet")
+}
+
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 
     // AndroidX Core para Edge-to-Edge (Android 15+)
     implementation("androidx.core:core-ktx:1.15.0")

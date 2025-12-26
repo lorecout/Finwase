@@ -1,0 +1,8 @@
+[
+  {
+    "key": "ctrl+alt+d",
+    "command": "deepseek.openChat",
+    "when": "editorTextFocus && editorHasSelection",
+    "description": "Abrir DeepSeek (e cole a seleção manualmente)"
+  }
+]

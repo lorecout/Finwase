@@ -464,7 +464,50 @@ class FirebaseService {
 
   /// Logout
   Future<void> signOut() async {
+    // Realizar logout no Firebase Auth. Se no futuro usar GoogleSignIn
+    // diretamente, adicione sua desconexão aqui.
     await _auth.signOut();
+  }
+
+  /// Realiza login com conta Google (mobile e web)
+  /// 
+  /// Estratégia:
+  /// - Usa GoogleAuthProvider.signInWithProvider() em todas as plataformas
+  /// - Não depende de google_sign_in plugin (simplifica dependências)
+  /// - Funciona em Web, Android, iOS, macOS, Windows
+  /// 
+  /// Retorna:
+  /// - UserCredential se login bem-sucedido
+  /// - null se usuário cancelar (não lança exceção)
+  /// - Lança exceção em caso de erro real
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      debugPrint('🔑 FIREBASE: Iniciando Google Sign-In...');
+      
+      final googleProvider = GoogleAuthProvider();
+      googleProvider.setCustomParameters({'prompt': 'select_account'});
+
+      final result = await _auth.signInWithProvider(googleProvider);
+      
+      if (result.user != null) {
+        debugPrint('✅ FIREBASE: Google Sign-In sucesso - UID: ${result.user!.uid}');
+        await createUserProfile(result.user!);
+        await initializeMessaging();
+      }
+      return result;
+    } on FirebaseAuthException catch (e) {
+      // Usuário cancelou o fluxo - não é um erro real
+      if (e.code == 'CANCELLED' || e.code == 'canceled') {
+        debugPrint('⚠️ FIREBASE: Google Sign-In cancelado pelo usuário');
+        return null;
+      }
+      
+      debugPrint('❌ FIREBASE: Erro ao fazer signInWithGoogle: ${e.code} - ${e.message}');
+      rethrow;
+    } catch (e) {
+      debugPrint('❌ FIREBASE: Erro inesperado ao fazer signInWithGoogle: $e');
+      rethrow;
+    }
   }
 
   /// Deletar conta do usuário

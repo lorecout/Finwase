@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/transaction.dart';
-import '../models/category.dart';
+import 'package:gastos_manager/models/transaction.dart';
+import 'package:gastos_manager/models/category.dart';
 import '../services/app_state.dart';
 import '../services/premium_service.dart';
 import '../services/theme_service.dart';
 import '../widgets/smart_ad_banner_widget.dart';
 import '../widgets/premium_feature_access_page.dart';
 import 'add_transaction_page.dart';
+import '../main.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});
@@ -508,7 +509,10 @@ class _TransactionsPageState extends State<TransactionsPage>
                     ),
                     onPressed: () {
                       if (premiumService.isPremium) {
-                        Navigator.pushNamed(context, '/bulk-transactions');
+                        // usar navigator global
+                        appNavigatorKey.currentState?.pushNamed(
+                          '/bulk-transactions',
+                        );
                       } else {
                         Navigator.push(
                           context,
@@ -519,8 +523,8 @@ class _TransactionsPageState extends State<TransactionsPage>
                                   'Adicione múltiplas transações de forma visual e organizada',
                               featureIcon: Icons.grid_view,
                               onAccessGranted: () {
-                                Navigator.pushNamed(
-                                  context,
+                                // usar navigator global aqui também
+                                appNavigatorKey.currentState?.pushNamed(
                                   '/bulk-transactions',
                                 );
                               },
@@ -597,7 +601,9 @@ class _TransactionsPageState extends State<TransactionsPage>
                   if (premiumService.isPremium) {
                     return FloatingActionButton.small(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/bulk-transactions');
+                        appNavigatorKey.currentState?.pushNamed(
+                          '/bulk-transactions',
+                        );
                       },
                       backgroundColor: Colors.amber,
                       heroTag: "bulk",

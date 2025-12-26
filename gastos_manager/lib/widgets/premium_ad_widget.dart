@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/premium_service.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 /// Widget que mostra call-to-action para premium quando usuário é free
 class PremiumAdWidget extends StatelessWidget {
   final String message;
@@ -83,7 +85,17 @@ class PremiumAdWidget extends StatelessWidget {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/premium-upgrade');
+                  final user = Provider.of<PremiumService>(
+                    context,
+                    listen: false,
+                  );
+                  // Checa autenticação via FirebaseAuth diretamente
+                  final currentUser = FirebaseAuth.instance.currentUser;
+                  if (currentUser == null) {
+                    Navigator.pushNamed(context, '/auth');
+                  } else {
+                    Navigator.pushNamed(context, '/premium-upgrade');
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,

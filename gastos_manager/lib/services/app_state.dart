@@ -4,42 +4,131 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gastos_manager/models/transaction.dart';
 import 'package:gastos_manager/models/category.dart';
 import 'package:gastos_manager/models/orcamento.dart';
+import 'package:gastos_manager/services/logging_service.dart';
+import 'dart:async';
 
 class AppState extends ChangeNotifier {
   final List<TransactionModel> _transacoes = [];
   final List<Orcamento> _orcamentos = [];
   final List<CategoryModel> _categorias = [];
   bool _isGuestMode = false;
+  bool _isLoading = false;
+  String? _error;
+  final LoggingService _logger = LoggingService();
 
   // Getters
   List<TransactionModel> get transacoes => List.unmodifiable(_transacoes);
   List<Orcamento> get orcamentos => List.unmodifiable(_orcamentos);
   List<CategoryModel> get categorias => List.unmodifiable(_categorias);
   bool get isGuest => _isGuestMode;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
-  // Métodos para transações
-  void adicionarTransacao(TransactionModel transacao) {
-    debugPrint(
-      '🔥 APP_STATE: Adicionando transação: ${transacao.title} - R\$ ${transacao.amount} - Tipo: ${transacao.type}',
-    );
-    _transacoes.add(transacao);
-    debugPrint(
-      '🔥 APP_STATE: Total de transações após adicionar: ${_transacoes.length}',
-    );
-    notifyListeners();
+  // Método auxiliar para executar operações com tratamento de erro
+  Future<void> _executeWithErrorHandling(
+    FutureOr<void> Function() action, {
+    String? successMessage,
+    String? errorMessage,
+  }) async {
+    try {
+      _setLoading(true);
+      _error = null;
+      final result = action();
+      if (result is Future) {
+        await result;
+      }
+      if (successMessage != null) {
+        _logger.info(successMessage, tag: 'AppState');
+      }
+    } catch (e, stackTrace) {
+      _error = errorMessage ?? 'Ocorreu um erro inesperado';
+      _logger.error(e, stackTrace, tag: 'AppState');
+      rethrow;
+    } finally {
+      _setLoading(false);
+    }
   }
 
-  void removerTransacao(String id) {
-    _transacoes.removeWhere((t) => t.id == id);
-    notifyListeners();
-  }
-
-  void atualizarTransacao(TransactionModel transacao) {
-    final index = _transacoes.indexWhere((t) => t.id == transacao.id);
-    if (index != -1) {
-      _transacoes[index] = transacao;
+  void _setLoading(bool loading) {
+    if (_isLoading != loading) {
+      _isLoading = loading;
       notifyListeners();
     }
+  }
+
+  // Métodos para transações
+  Future<void> adicionarTransacao(TransactionModel transacao) async {
+    await _executeWithErrorHandling(
+      () async {
+        _logger.debug(
+          'Adicionando transação: ${transacao.title} - R\$ ${transacao.amount} - Tipo: ${transacao.type}',
+          tag: 'AppState',
+        );
+
+        // Verifica se já existe uma transação com o mesmo ID
+        if (_transacoes.any((t) => t.id == transacao.id)) {
+          throw Exception('Já existe uma transação com o mesmo ID');
+        }
+
+        _transacoes.add(transacao);
+        _transacoes.sort(
+          (a, b) => b.date.compareTo(a.date),
+        ); // Ordena por data mais recente
+
+        _logger.debug(
+          'Total de transações após adicionar: ${_transacoes.length}',
+          tag: 'AppState',
+        );
+
+        notifyListeners();
+      },
+      successMessage: 'Transação adicionada com sucesso',
+      errorMessage: 'Falha ao adicionar transação',
+    );
+  }
+
+  Future<void> removerTransacao(String id) async {
+    await _executeWithErrorHandling(
+      () {
+        final initialCount = _transacoes.length;
+        _transacoes.removeWhere((t) => t.id == id);
+
+        if (initialCount == _transacoes.length) {
+          throw Exception('Transação não encontrada');
+        }
+
+        _logger.debug(
+          'Transação removida. Total: ${_transacoes.length}',
+          tag: 'AppState',
+        );
+
+        notifyListeners();
+      },
+      successMessage: 'Transação removida com sucesso',
+      errorMessage: 'Falha ao remover transação',
+    );
+  }
+
+  Future<void> atualizarTransacao(TransactionModel transacao) async {
+    await _executeWithErrorHandling(
+      () {
+        final index = _transacoes.indexWhere((t) => t.id == transacao.id);
+        if (index == -1) {
+          throw Exception('Transação não encontrada para atualização');
+        }
+
+        _transacoes[index] = transacao;
+        _transacoes.sort(
+          (a, b) => b.date.compareTo(a.date),
+        ); // Reordena após atualização
+
+        _logger.debug('Transação atualizada: ${transacao.id}', tag: 'AppState');
+
+        notifyListeners();
+      },
+      successMessage: 'Transação atualizada com sucesso',
+      errorMessage: 'Falha ao atualizar transação',
+    );
   }
 
   // Métodos para orçamentos
@@ -96,6 +185,14 @@ class AppState extends ChangeNotifier {
       limparDados();
     }
     notifyListeners();
+  }
+
+  // Método para limpar erro
+  void clearError() {
+    if (_error != null) {
+      _error = null;
+      notifyListeners();
+    }
   }
 
   // Método para obter categoria por ID
@@ -159,13 +256,13 @@ class AppState extends ChangeNotifier {
   double get receitasPeriodo {
     return _transacoes
         .where((transacao) => transacao.type == TransactionType.income)
-        .fold(0.0, (sum, transacao) => sum + transacao.amount);
+        .fold(0.0, (acc, transacao) => acc + transacao.amount);
   }
 
   double get despesasPeriodo {
     return _transacoes
         .where((transacao) => transacao.type == TransactionType.expense)
-        .fold(0.0, (sum, transacao) => sum + transacao.amount);
+        .fold(0.0, (acc, transacao) => acc + transacao.amount);
   }
 
   double get saldoTotal {

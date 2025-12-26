@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'ad_service.dart';
 
@@ -128,32 +129,36 @@ class AdRevenueOptimizer {
     }
   }
 
-  /// Registrar desempenho do anúncio
-  void _recordAdPerformance(String adId, {bool isImpression = false, bool isClick = false}) {
+  /// Registrar desempenho do anúncio (com rastreamento de receita de teste)
+  void _recordAdPerformance(
+    String adId, {
+    bool isImpression = false,
+    bool isClick = false,
+  }) {
     final data = _performanceData[adId] ??= AdPerformanceData();
+
     if (isImpression) {
       data.impressions++;
     }
+
     if (isClick) {
       data.clicks++;
-      data.revenue += 0.10; // Estimar receita por clique
     }
+
     data.lastUpdated = DateTime.now();
     _savePerformanceData();
   }
 
   /// Salvar dados de desempenho (implementar com SharedPreferences/Hive)
   void _savePerformanceData() {
-    final dataMap = _performanceData.map(
-      (key, value) => MapEntry(
-        key,
-        {
-          'impressions': value.impressions,
-          'clicks': value.clicks,
-          'revenue': value.revenue,
-          'lastUpdated': value.lastUpdated.toIso8601String(),
-        },
-      ),
+    // Mapeia os dados de desempenho para formato de persistência
+    _performanceData.map(
+      (key, value) => MapEntry(key, {
+        'impressions': value.impressions,
+        'clicks': value.clicks,
+        'revenue': value.revenue,
+        'lastUpdated': value.lastUpdated.toIso8601String(),
+      }),
     );
     // TODO: Implementar persistência em SharedPreferences ou banco de dados
     // Exemplo: await prefs.setString('ad_performance', jsonEncode(dataMap));
@@ -200,8 +205,12 @@ class AdRevenueOptimizer {
       'totalRevenue': totalRevenue,
       'totalImpressions': totalImpressions,
       'totalClicks': totalClicks,
-      'averageCTR': totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0,
-      'averageECPM': totalImpressions > 0 ? (totalRevenue / totalImpressions) * 1000 : 0.0,
+      'averageCTR': totalImpressions > 0
+          ? (totalClicks / totalImpressions) * 100
+          : 0.0,
+      'averageECPM': totalImpressions > 0
+          ? (totalRevenue / totalImpressions) * 1000
+          : 0.0,
     };
   }
 
@@ -264,6 +273,7 @@ class AdRevenueOptimizer {
     required Function(LoadAdError) onAdFailedToLoad,
   }) async {
     final prodId = AdService.rewardedUnitId();
+    final completer = Completer<RewardedAd?>();
 
     RewardedAd.load(
       adUnitId: prodId,
@@ -273,14 +283,16 @@ class AdRevenueOptimizer {
           _rewardedAd = ad;
           _recordAdPerformance(prodId, isImpression: true);
           onAdLoaded(ad);
+          completer.complete(ad);
         },
         onAdFailedToLoad: (error) {
           onAdFailedToLoad(error);
+          completer.complete(null);
         },
       ),
     );
 
-    return null;
+    return completer.future;
   }
 
   /// Obter melhor ID de banner baseado em desempenho
@@ -300,4 +312,3 @@ class AdRevenueOptimizer {
     _rewardedAd?.dispose();
   }
 }
-

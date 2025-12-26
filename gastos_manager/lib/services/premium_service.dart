@@ -9,15 +9,19 @@ class PremiumService extends ChangeNotifier {
     'admin@finwise.com', // Email de backup admin
   ];
 
-  bool _isPremium = false;
+  bool _isPremium = true; // SEMPRE PREMIUM - GRATUITO TOTAL
   String _currentPlan = 'free';
   DateTime? _premiumExpiryDate;
   bool _isAdminModeActive = false; // Controle do modo admin
   bool _hasHadTrial = false; // Mantido para compatibilidade, mas não usado
   DateTime? _trialGrantedAt; // Mantido para compatibilidade, mas não usado
 
+  // Valor fixo do plano premium
+  static const double premiumPrice = 9.90;
+
   // Getters públicos
-  bool get isPremium => _isPremium || (_isAdminModeActive && isAdmin);
+  // NOTA: isPremium sempre retorna true porque FORCE_PREMIUM está ativado em config.dart
+  bool get isPremium => true; // Todos os usuários são premium
   String get currentPlan => _currentPlan;
   DateTime? get premiumExpiryDate => _premiumExpiryDate;
   bool get hasHadTrial => _hasHadTrial;
@@ -50,8 +54,8 @@ class PremiumService extends ChangeNotifier {
       if (userDoc.exists) {
         final data = userDoc.data()!;
 
-        // Carregar status premium
-        _isPremium = data['isPremium'] ?? false;
+        // Carregar status premium - SEMPRE PREMIUM NO MODO GRATUITO TOTAL
+        _isPremium = true; // FORCE_PREMIUM ativo
         _currentPlan = data['currentPlan'] ?? 'free';
 
         // Carregar data de expiração
@@ -517,4 +521,13 @@ class PremiumService extends ChangeNotifier {
 
   /// Verificar se está em modo premium temporário
   bool get isTemporaryPremium => _currentPlan == 'rewarded';
+
+  /// Método para simular a compra do plano premium por R$ 9,90
+  Future<bool> comprarPremium() async {
+    _isPremium = true;
+    _currentPlan = 'premium';
+    _premiumExpiryDate = DateTime.now().add(const Duration(days: 365));
+    notifyListeners();
+    return true;
+  }
 }

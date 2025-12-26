@@ -593,12 +593,14 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
   void _saveTransactions() async {
     if (_parsedTransactions.isEmpty) return;
 
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final validTransactions = _parsedTransactions
         .where((t) => t.isValid)
         .toList();
 
     if (validTransactions.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      if (!mounted) return;
+      scaffoldMessenger.showSnackBar(
         const SnackBar(
           content: Text('Nenhuma transação válida para salvar'),
           backgroundColor: Colors.red,
@@ -622,8 +624,6 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
       final transacoesProcessadas = <Map<String, dynamic>>[];
 
       for (final parsed in validTransactions) {
-        final appState = Provider.of<AppState>(context, listen: false);
-
         // Tentar encontrar categoria existente pelo nome
         CategoryModel? categoria = appState.categorias
             .cast<CategoryModel?>()
@@ -644,9 +644,12 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
                 : CategoryType.expense,
           );
 
-          // Adicionar ao estado local e salvar no Firestore
+          // Adicionar ao estado local
           appState.adicionarCategoria(categoria);
-          await firebaseService.saveCategory(categoria);
+          // Salvar no Firestore apenas se estiver logado
+          if (firebaseService.userId != null) {
+            await firebaseService.saveCategory(categoria);
+          }
         }
 
         transacoesProcessadas.add({
@@ -674,11 +677,14 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
         // Adicionar ao estado local
         appState.adicionarTransacao(transaction);
 
-        // Salvar no Firestore
-        await firebaseService.saveTransaction(transaction);
+        // Salvar no Firestore apenas se estiver logado
+        if (firebaseService.userId != null) {
+          await firebaseService.saveTransaction(transaction);
+        }
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      if (!mounted) return;
+      scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text(
             '${validTransactions.length} transações salvas com sucesso!',
@@ -689,6 +695,7 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
 
       // Recarregar dados para garantir que o dashboard seja atualizado
       await appState.carregarDados();
+      if (!mounted) return;
 
       // Limpar e voltar
       setState(() {
@@ -697,9 +704,10 @@ class _BulkTextInputPageState extends State<BulkTextInputPage> {
         _showPreview = false;
       });
 
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      if (!mounted) return;
+      scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text('Erro ao salvar transações: $e'),
           backgroundColor: Colors.red,

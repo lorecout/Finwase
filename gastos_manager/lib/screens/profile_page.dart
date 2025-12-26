@@ -160,7 +160,9 @@ class ProfilePage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, '/auth'),
+                  onPressed: () => Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (_) => const AuthPage())),
                   icon: const Icon(Icons.login),
                   label: const Text('Fazer Login para Sincronizar Dados'),
                   style: ElevatedButton.styleFrom(
@@ -453,7 +455,9 @@ class ProfilePage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/auth');
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (_) => const AuthPage()),
+              );
             },
             child: const Text('Sair'),
           ),

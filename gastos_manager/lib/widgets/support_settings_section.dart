@@ -60,10 +60,7 @@ class SupportSettingsSection extends StatelessWidget {
       leading: Icon(icon, color: textColor),
       title: Text(
         title,
-        style: TextStyle(
-          fontWeight: FontWeight.w500,
-          color: textColor,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w500, color: textColor),
       ),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.chevron_right),
@@ -90,6 +87,7 @@ class SupportSettingsSection extends StatelessWidget {
   }
 
   void _showBugReportDialog(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     DialogUtils.showTextInputDialog(
       context,
       title: AppConstants.bugReport,
@@ -97,7 +95,12 @@ class SupportSettingsSection extends StatelessWidget {
       maxLines: 5,
     ).then((description) {
       if (description != null && description.isNotEmpty) {
-        SnackBarUtils.showSuccess(context, AppConstants.bugReportSent);
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text(AppConstants.bugReportSent),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     });
   }

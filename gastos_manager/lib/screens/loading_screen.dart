@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/safe_asset_image.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? loadingMessage;
@@ -55,16 +56,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
-                  child: Image.asset(
-                    'assets/icon/novo-icone.png',
+                  child: const SafeAssetImage(
+                    'assets/onboarding/welcome.png',
+                    height: 120,
+                    width: 120,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.account_balance_wallet,
-                        size: 60,
-                        color: Color(0xFF1a237e),
-                      );
-                    },
                   ),
                 ),
               ),

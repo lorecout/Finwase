@@ -104,7 +104,10 @@ class _BudgetPageState extends State<BudgetPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Orçado', style: TextStyle(color: Colors.white70)),
+                    const Text(
+                      'Orçado',
+                      style: TextStyle(color: Colors.white70),
+                    ),
                     Text(
                       'R\$ ${totalOrcado.toStringAsFixed(2)}',
                       style: const TextStyle(
@@ -118,7 +121,10 @@ class _BudgetPageState extends State<BudgetPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Gasto', style: TextStyle(color: Colors.white70)),
+                    const Text(
+                      'Gasto',
+                      style: TextStyle(color: Colors.white70),
+                    ),
                     Text(
                       'R\$ ${totalGasto.toStringAsFixed(2)}',
                       style: const TextStyle(
@@ -287,7 +293,7 @@ class _BudgetPageState extends State<BudgetPage> {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Card(
-              color: alert.cor.withOpacity(0.1),
+              color: alert.cor.withValues(alpha: 0.1),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
@@ -372,7 +378,9 @@ class _BudgetPageState extends State<BudgetPage> {
                           children: [
                             Text(
                               sugestao.categoria,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -401,12 +409,20 @@ class _BudgetPageState extends State<BudgetPage> {
                         onPressed: jaTemOrcamento
                             ? null
                             : () async {
-                                await Provider.of<BudgetService>(
+                                final budgetService =
+                                    Provider.of<BudgetService>(
+                                      context,
+                                      listen: false,
+                                    );
+                                final scaffoldMessenger = ScaffoldMessenger.of(
                                   context,
-                                  listen: false,
-                                ).aceitarSugestao(sugestao);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('✅ Orçamento salvo!')),
+                                );
+                                await budgetService.aceitarSugestao(sugestao);
+                                if (!mounted) return;
+                                scaffoldMessenger.showSnackBar(
+                                  const SnackBar(
+                                    content: Text('✅ Orçamento salvo!'),
+                                  ),
                                 );
                               },
                         style: ElevatedButton.styleFrom(
@@ -474,11 +490,14 @@ class _BudgetPageState extends State<BudgetPage> {
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () async {
-                  await Provider.of<BudgetService>(
+                  final budgetService = Provider.of<BudgetService>(
                     context,
                     listen: false,
-                  ).removerOrcamento(categoria);
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  );
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+                  await budgetService.removerOrcamento(categoria);
+                  if (!mounted) return;
+                  scaffoldMessenger.showSnackBar(
                     const SnackBar(content: Text('✅ Orçamento removido')),
                   );
                 },
@@ -486,7 +505,8 @@ class _BudgetPageState extends State<BudgetPage> {
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: alert?.cor.withOpacity(0.2) ?? Colors.blue.shade100,
+                  color:
+                      alert?.cor.withValues(alpha: 0.2) ?? Colors.blue.shade100,
                   shape: BoxShape.circle,
                 ),
                 child: Text(

@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "Kingleo.deepseek",
+    "ms-vscode.simple-browser",
+    "Sixth.claude4"
+  ],
+  "unwantedRecommendations": []
+}

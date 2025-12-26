@@ -1,0 +1,46 @@
+{
+  "Explain Function (PT-BR)": {
+    "prefix": "ds-explain",
+    "body": [
+      "Explique o que faz a função abaixo em português simples e indique potenciais problemas e casos de borda:",
+      "```dart",
+      "$1",
+      "```",
+      ""
+    ],
+    "description": "Prompt: explique função (português)"
+  },
+  "Refactor (clear + perf)": {
+    "prefix": "ds-refactor",
+    "body": [
+      "Refatore o código abaixo para melhorar legibilidade e desempenho sem alterar comportamento. Explique as mudanças e mostre a versão refatorada:",
+      "```dart",
+      "$1",
+      "```",
+      ""
+    ],
+    "description": "Prompt: refatorar código"
+  },
+  "Generate Unit Tests (Flutter)": {
+    "prefix": "ds-tests",
+    "body": [
+      "Escreva testes unitários usando `flutter_test` para o componente abaixo. Inclua mocks e casos de sucesso/erro:",
+      "```dart",
+      "${TM_SELECTED_TEXT:$1}",
+      "```"
+    ],
+    "description": "Prompt: gerar testes unitários"
+  }
+
+  ,
+  "Generate Unit Tests For Selection (Flutter)": {
+    "prefix": "ds-tests-selection",
+    "body": [
+      "Escreva testes unitários usando `flutter_test` para o componente abaixo (usando a seleção atual do editor). Inclua mocks e casos de sucesso/erro:",
+      "```dart",
+      "${TM_SELECTED_TEXT}",
+      "```"
+    ],
+    "description": "Prompt: gerar testes unitários para seleção atual"
+  }
+}

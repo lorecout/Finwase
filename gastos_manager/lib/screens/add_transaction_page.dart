@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/transaction.dart';
-import '../models/category.dart';
+import 'package:gastos_manager/models/transaction.dart';
+import 'package:gastos_manager/models/category.dart';
 import '../services/app_state.dart';
 import '../services/theme_service.dart';
 import '../services/premium_service.dart';
 import '../services/ad_integration_service.dart';
-import '../services/streak_service.dart';
+// import removido: streak_service.dart
+import '../widgets/feedback_animation.dart';
 
 // Mapa de ícones do Material Design por string
 final Map<String, IconData> _iconMap = {
@@ -34,6 +35,24 @@ class AddTransactionPage extends StatefulWidget {
 }
 
 class _AddTransactionPageState extends State<AddTransactionPage> {
+  Future<void> _showFeedbackAnimation(
+    String message,
+    IconData icon,
+    Color color,
+  ) async {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned.fill(
+        child: IgnorePointer(
+          child: FeedbackAnimation(message: message, icon: icon, color: color),
+        ),
+      ),
+    );
+    overlay.insert(overlayEntry);
+    await Future.delayed(const Duration(milliseconds: 1400));
+    overlayEntry.remove();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _descricaoController = TextEditingController();
   final _valorController = TextEditingController();
@@ -156,29 +175,33 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         appState.adicionarTransacao(transacao);
 
         // Registrar atividade no streak
-        final streakService = Provider.of<StreakService>(
-          context,
-          listen: false,
-        );
-        streakService.recordActivity();
+        // streakService removido
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Transação adicionada com sucesso!')),
+        await _showFeedbackAnimation(
+          'Transação adicionada com sucesso!',
+          Icons.check_circle,
+          Colors.green,
         );
+        if (!mounted) return;
       } else {
         appState.atualizarTransacao(transacao);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Transação atualizada com sucesso!')),
+        await _showFeedbackAnimation(
+          'Transação atualizada com sucesso!',
+          Icons.edit,
+          Colors.blue,
         );
+        if (!mounted) return;
       }
 
       Navigator.of(context).pop(true);
 
       // Registrar ação e mostrar anúncio intersticial otimizado para usuários não premium
+      if (!mounted) return;
       final premiumService = Provider.of<PremiumService>(
         context,
         listen: false,
       );
+
       if (!premiumService.isPremium && mounted) {
         // Registrar ação de salvar transação no sistema de otimização
         Future.delayed(const Duration(milliseconds: 500), () {

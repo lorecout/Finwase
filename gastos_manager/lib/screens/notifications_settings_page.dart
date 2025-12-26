@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/firebase_messaging_service.dart';
+import '../services/settings_service.dart';
 
 class NotificationsSettingsPage extends StatefulWidget {
   const NotificationsSettingsPage({super.key});
@@ -191,11 +192,13 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () async {
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
                         await _firebaseMessagingService.testarNotificacaoFCM(
                           titulo: '🧪 Notificação de Teste',
                           corpo: 'Esta é uma notificação de teste do FinWise',
                         );
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        if (!mounted) return;
+                        scaffoldMessenger.showSnackBar(
                           const SnackBar(
                             content: Text('✅ Notificação de teste enviada'),
                           ),
@@ -275,20 +278,17 @@ class _NotificationsSettingsPageState extends State<NotificationsSettingsPage> {
     required String settingKey,
     Function(bool)? onChanged,
   }) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        bool value = true; // valor padrão
-
+    return Consumer<SettingsService>(
+      builder: (context, settings, _) {
+        final value = settings.getNotificationPreference(settingKey);
         return ListTile(
           leading: Icon(icon, color: Theme.of(context).primaryColor),
           title: Text(title),
           subtitle: Text(subtitle, style: TextStyle(color: Colors.grey[600])),
           trailing: Switch(
             value: value,
-            onChanged: (newValue) {
-              setState(() {
-                value = newValue;
-              });
+            onChanged: (newValue) async {
+              await settings.setNotificationPreference(settingKey, newValue);
               onChanged?.call(newValue);
             },
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import '../services/theme_service.dart';
 import '../services/app_state.dart';
 import '../constants.dart';
@@ -11,6 +10,7 @@ import '../widgets/data_settings_section.dart';
 import '../widgets/support_settings_section.dart';
 import '../widgets/premium_settings_section.dart';
 import '../widgets/admin_settings_section.dart';
+import '../main.dart'; // importar appNavigatorKey
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -121,7 +121,7 @@ class _SettingsPageState extends State<SettingsPage> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+
         border: Border.all(
           color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
           width: 1,
@@ -230,51 +230,48 @@ class _SettingsPageState extends State<SettingsPage> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Sair da Conta'),
         content: const Text(
-          'Tem certeza que deseja sair da sua conta? '
-          'Você precisará fazer login novamente.',
+          'Tem certeza que deseja sair da sua conta? Você precisará fazer login novamente.',
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Cancelar'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
-              Navigator.pop(context);
-
+              Navigator.pop(dialogContext);
+              // Capture provider, navigator e scaffoldMessenger antes de calls assíncronos
+              final appState = Provider.of<AppState>(context, listen: false);
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
               try {
                 // Fazer logout completo do Firebase
                 await FirebaseAuth.instance.signOut();
 
-                // Limpar cache do Google Sign-In também
-                final GoogleSignIn googleSignIn = GoogleSignIn();
-                await googleSignIn.signOut();
+                // Se precisar adicionar logout do Google no futuro, faça aqui com
+                // uma chamada opcional e tratada por try/catch; por enquanto evitamos
+                // referenciar diretamente GoogleSignIn para manter compatibilidade.
 
                 // Limpar estado do app
-                final appState = Provider.of<AppState>(context, listen: false);
                 appState.setGuestMode(false);
 
-                // Navegar para tela de auth
-                if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/auth',
-                    (route) => false,
-                  );
-                }
+                // Navegar para tela de auth usando navegação global (key)
+                if (!mounted) return;
+                appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+                  '/auth',
+                  (route) => false,
+                );
               } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Erro ao fazer logout: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
+                if (!mounted) return;
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    content: Text('Erro ao fazer logout: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
               }
             },
             child: const Text('SAIR'),

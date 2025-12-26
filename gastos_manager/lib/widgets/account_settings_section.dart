@@ -138,6 +138,7 @@ class AccountSettingsSection extends StatelessWidget {
   }
 
   void _showEmailDialog(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final newEmail = await DialogUtils.showTextInputDialog(
       context,
       title: AppConstants.changeEmail,
@@ -146,11 +147,17 @@ class AccountSettingsSection extends StatelessWidget {
 
     if (newEmail != null && newEmail.isNotEmpty) {
       // TODO: Implementar lógica de mudança de email
-      SnackBarUtils.showSuccess(context, AppConstants.emailUpdated);
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text(AppConstants.emailUpdated),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 
   void _showChangePasswordDialog(BuildContext context) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     final result = await showDialog<Map<String, String>>(
       context: context,
       builder: (context) => const _ChangePasswordDialog(),
@@ -158,7 +165,12 @@ class AccountSettingsSection extends StatelessWidget {
 
     if (result != null) {
       // TODO: Implementar lógica de mudança de senha
-      SnackBarUtils.showSuccess(context, AppConstants.passwordChanged);
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text(AppConstants.passwordChanged),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 

@@ -25,7 +25,11 @@ class SnackBarUtils {
   }
 
   /// Exibe uma SnackBar informativa
-  static void showInfo(BuildContext context, String message, {Duration? duration}) {
+  static void showInfo(
+    BuildContext context,
+    String message, {
+    Duration? duration,
+  }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -59,10 +63,7 @@ class SnackBarUtils {
         content: Text(message),
         backgroundColor: backgroundColor,
         duration: duration ?? const Duration(seconds: 4),
-        action: SnackBarAction(
-          label: actionLabel,
-          onPressed: onAction,
-        ),
+        action: SnackBarAction(label: actionLabel, onPressed: onAction),
       ),
     );
   }

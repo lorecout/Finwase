@@ -186,35 +186,48 @@ class DataSettingsSection extends StatelessWidget {
     );
   }
 
-  void _performManualBackup(
+  Future<void> _performManualBackup(
     BuildContext context,
     BackupService backupService,
   ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     await backupService.performBackup();
-    if (!context.mounted) return;
-    SnackBarUtils.showSuccess(context, AppConstants.backupSuccessful);
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(
+        content: Text(AppConstants.backupSuccessful),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
-  void _showRestoreDialog(BuildContext context, BackupService backupService) {
+  Future<void> _showRestoreDialog(
+    BuildContext context,
+    BackupService backupService,
+  ) async {
     if (backupService.lastBackupDate == null) {
       SnackBarUtils.showWarning(context, AppConstants.noBackupAvailable);
       return;
     }
 
-    DialogUtils.showConfirmationDialog(
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final confirmed = await DialogUtils.showConfirmationDialog(
       context,
       title: AppConstants.restoreBackup,
       content:
           'Isso irá substituir todos os dados atuais pelos dados do backup de ${_formatDateTime(backupService.lastBackupDate!)}. Esta ação não pode ser desfeita.',
       confirmText: AppConstants.restore,
       confirmColor: Colors.blue,
-    ).then((confirmed) async {
-      if (confirmed == true) {
-        await backupService.restoreBackup();
-        if (!context.mounted) return;
-        SnackBarUtils.showSuccess(context, AppConstants.backupRestored);
-      }
-    });
+    );
+
+    if (confirmed == true) {
+      await backupService.restoreBackup();
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text(AppConstants.backupRestored),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
   }
 
   void _showExportDialog(BuildContext context, PremiumService premiumService) {
@@ -249,6 +262,7 @@ class DataSettingsSection extends StatelessWidget {
   }
 
   void _showImportDialog(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     DialogUtils.showConfirmationDialog(
       context,
       title: AppConstants.importData,
@@ -257,12 +271,15 @@ class DataSettingsSection extends StatelessWidget {
       confirmColor: Colors.blue,
     ).then((confirmed) {
       if (confirmed == true) {
-        SnackBarUtils.showInfo(context, AppConstants.selectingFile);
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(content: Text(AppConstants.selectingFile)),
+        );
       }
     });
   }
 
   void _showClearDataDialog(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     DialogUtils.showConfirmationDialog(
       context,
       title: AppConstants.clearAllData,
@@ -271,7 +288,12 @@ class DataSettingsSection extends StatelessWidget {
       confirmColor: Colors.red,
     ).then((confirmed) {
       if (confirmed == true) {
-        SnackBarUtils.showSuccess(context, AppConstants.dataCleared);
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text(AppConstants.dataCleared),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     });
   }

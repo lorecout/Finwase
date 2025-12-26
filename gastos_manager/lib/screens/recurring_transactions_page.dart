@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/transaction.dart';
+import 'package:gastos_manager/models/transaction.dart';
 import '../services/app_state.dart';
 import '../services/theme_service.dart';
 import '../widgets/smart_ad_banner_widget.dart';

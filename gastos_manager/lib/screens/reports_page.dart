@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../models/transaction.dart';
-import '../models/category.dart';
+import 'package:gastos_manager/models/transaction.dart';
+import 'package:gastos_manager/models/category.dart';
 import '../services/app_state.dart';
 import '../services/theme_service.dart';
 import '../widgets/smart_ad_banner_widget.dart';
@@ -84,10 +84,7 @@ class _ReportsPageState extends State<ReportsPage>
                 children: [
                   const Text(
                     'Resumo Financeiro',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -284,7 +281,10 @@ class _ReportsPageState extends State<ReportsPage>
               // Seletor de mês
               Container(
                 margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey[300]!),
                   borderRadius: BorderRadius.circular(8),

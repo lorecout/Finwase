@@ -81,27 +81,58 @@ class SmartInterstitialService {
   }
 
   /// Carregar anúncio recompensado otimizado
-  Future<void> loadRewarded() async {
-    if (_isRewardedLoading || _rewardedAd != null) return;
+  Future<void> loadRewarded({int retryCount = 0}) async {
+    if (_isRewardedLoading) return;
+    if (_rewardedAd != null) {
+      debugPrint('🎯 SMART REWARDED: Já tem rewarded carregado');
+      return;
+    }
 
     _isRewardedLoading = true;
-    debugPrint('🎯 SMART REWARDED: Carregando rewarded otimizado...');
+    debugPrint(
+      '🎯 SMART REWARDED: Carregando rewarded otimizado (tentativa ${retryCount + 1})...',
+    );
 
     try {
       _rewardedAd = await _optimizer.createOptimizedRewarded(
         onAdLoaded: (ad) {
           _isRewardedLoading = false;
-          debugPrint('✅ SMART REWARDED: Rewarded carregado!');
+          _rewardedAd = ad; // Garantir atribuição
+          debugPrint('✅ SMART REWARDED: Rewarded carregado com sucesso!');
         },
         onAdFailedToLoad: (error) {
           _isRewardedLoading = false;
           _rewardedAd = null;
-          debugPrint('❌ SMART REWARDED: Falha ao carregar: $error');
+          debugPrint(
+            '❌ SMART REWARDED: Falha ao carregar (código ${error.code}): ${error.message}',
+          );
+
+          // Retry automático até 3 tentativas
+          if (retryCount < 2) {
+            Future.delayed(const Duration(seconds: 3), () {
+              loadRewarded(retryCount: retryCount + 1);
+            });
+          }
         },
       );
+
+      // Se retornou null, erro no carregamento
+      if (_rewardedAd == null && retryCount < 2) {
+        _isRewardedLoading = false;
+        Future.delayed(const Duration(seconds: 3), () {
+          loadRewarded(retryCount: retryCount + 1);
+        });
+      }
     } catch (e) {
       _isRewardedLoading = false;
       debugPrint('❌ SMART REWARDED: Erro: $e');
+
+      // Retry em caso de erro
+      if (retryCount < 2) {
+        Future.delayed(const Duration(seconds: 3), () {
+          loadRewarded(retryCount: retryCount + 1);
+        });
+      }
     }
   }
 
@@ -111,17 +142,32 @@ class SmartInterstitialService {
     required Function() onRewarded,
     String rewardMessage = 'Assista ao anúncio para ganhar a recompensa!',
   }) async {
+    debugPrint('🎯 SMART REWARDED: Tentando mostrar rewarded...');
+    debugPrint('🎯 SMART REWARDED: _rewardedAd = $_rewardedAd');
+
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     if (_rewardedAd == null) {
+      debugPrint('🎯 SMART REWARDED: Carregando rewarded sob demanda...');
       await loadRewarded();
+
+      // Aguardar um pouco mais para o carregamento
+      await Future.delayed(const Duration(seconds: 2));
+
       if (_rewardedAd == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        debugPrint(
+          '❌ SMART REWARDED: Rewarded ainda não disponível após espera',
+        );
+        scaffoldMessenger.showSnackBar(
           const SnackBar(
             content: Text(
-              'Anúncio não disponível no momento. Tente novamente.',
+              'Anúncio não disponível no momento. Tente novamente em alguns segundos.',
             ),
             backgroundColor: Colors.orange,
+            duration: Duration(seconds: 4),
           ),
         );
+        // Agendar carregamento para próxima tentativa
+        loadRewarded();
         return false;
       }
     }
@@ -240,6 +286,7 @@ class _RewardedAdButtonState extends State<RewardedAdButton> {
     setState(() {
       _isLoading = true;
     });
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     try {
       final success = await _service.showRewarded(
@@ -248,8 +295,9 @@ class _RewardedAdButtonState extends State<RewardedAdButton> {
         rewardMessage: widget.rewardMessage,
       );
 
+      if (!mounted) return;
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        scaffoldMessenger.showSnackBar(
           const SnackBar(
             content: Text('🎁 Recompensa recebida!'),
             backgroundColor: Colors.green,

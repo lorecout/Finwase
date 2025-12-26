@@ -1,0 +1,17 @@
+{
+  // Habilita sugestões inline (ghost text) que o Codeium e outros provedores usam
+  "editor.inlineSuggest.enabled": true,
+  // Aceita sugestões com Enter
+  "editor.acceptSuggestionOnEnter": "on",
+  // Usa o primeiro item da lista de sugestões por padrão
+  "editor.suggestSelection": "first",
+  // Habilita tab completion (aceitar sugestões com Tab quando aplicável)
+  "editor.tabCompletion": "on",
+
+  // Configurações recomendadas do Codeium para este workspace
+  "codeium.enableConfig": { "*": true },
+  "codeium.enableInComments": true,
+  "codeium.enableCodeLens": true,
+  "codeium.useSecretStorage": true,
+  "C_Cpp.default.compilerPath": "c:\\Users\\Lorena\\AppData\\Local\\Temp\\56a3ce64-9826-40bb-b014-cfa45304deb8_Python-3.10.19.tar.xz.eb8\\Python-3.10.19\\PC\\_msi.c"
+}

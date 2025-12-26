@@ -57,9 +57,9 @@ class Orcamento {
   /// Verificar se o orçamento está ativo no período atual
   bool get estaAtivo {
     final agora = DateTime.now();
-    return ativo && 
-           agora.isAfter(dataInicio) && 
-           agora.isBefore(dataFim.add(const Duration(days: 1)));
+    return ativo &&
+        agora.isAfter(dataInicio) &&
+        agora.isBefore(dataFim.add(const Duration(days: 1)));
   }
 
   /// Calcular porcentagem usada baseada no valor gasto

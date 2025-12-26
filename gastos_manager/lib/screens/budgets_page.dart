@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/orcamento.dart';
-import '../models/category.dart';
+import 'package:gastos_manager/models/orcamento.dart';
+import 'package:gastos_manager/models/category.dart';
 import '../services/app_state.dart';
 import '../services/theme_service.dart';
 import '../widgets/smart_ad_banner_widget.dart';

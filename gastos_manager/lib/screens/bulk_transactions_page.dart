@@ -337,11 +337,13 @@ class _BulkTransactionsPageState extends State<BulkTransactionsPage>
           _transacoesPendentes = transacoes;
         });
 
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${transacoes.length} transações importadas')),
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Erro ao importar arquivo')));

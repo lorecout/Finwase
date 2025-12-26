@@ -1,0 +1,54 @@
+# Workflow para atualizar automaticamente o app-ads.txt no repositório do GitHub Pages
+# Salve este arquivo como .github/workflows/update-app-ads-txt.yml no seu repositório principal (Finwase/gastos_manager)
+
+name: Atualizar app-ads.txt no GitHub Pages
+
+on:
+  push:
+    paths:
+      - 'app-ads.txt'
+    branches:
+      - main
+
+jobs:
+  update-app-ads-txt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório principal
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verificar existência do app-ads.txt
+        run: |
+          if [ ! -f app-ads.txt ]; then
+            echo 'ERRO: O arquivo app-ads.txt não foi encontrado.'
+            exit 1
+          fi
+
+      - name: Copiar app-ads.txt
+        run: cp app-ads.txt ../app-ads.txt
+
+      - name: Clonar repositório do GitHub Pages
+        uses: actions/checkout@v4
+        with:
+          repository: lorecout/lorecout.github.io
+          token: ${{ secrets.PAGES_TOKEN }}
+          path: site
+
+      - name: Substituir app-ads.txt no site
+        run: |
+          if [ ! -d site ]; then
+            echo 'ERRO: Diretório do site não encontrado.'
+            exit 1
+          fi
+          cp ../app-ads.txt site/app-ads.txt
+
+      - name: Commit e push das alterações
+        run: |
+          cd site
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add app-ads.txt
+          git diff --cached --quiet && echo 'Nada para commitar' || git commit -m 'Atualizar app-ads.txt automaticamente'
+          git push || echo 'Aviso: Falha ao fazer push. Verifique permissões e token.'

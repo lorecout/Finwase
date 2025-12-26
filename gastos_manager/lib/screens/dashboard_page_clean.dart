@@ -7,8 +7,8 @@ import '../services/app_state.dart';
 import '../utils/design_system.dart';
 import '../widgets/smart_ad_banner_widget.dart';
 import '../widgets/premium_ad_widget.dart';
-import '../widgets/streak_widget.dart';
-import '../services/streak_service.dart';
+import 'auth_page.dart';
+// import removido: streak_service.dart
 
 class DashboardPageClean extends StatefulWidget {
   const DashboardPageClean({super.key});
@@ -204,11 +204,7 @@ class _DashboardPageCleanState extends State<DashboardPageClean> {
                           ),
 
                           // Streak Widget - mostrar sequência de atividades
-                          Consumer<StreakService>(
-                            builder: (context, streakService, _) {
-                              return const StreakWidget();
-                            },
-                          ),
+                          // Widget de streak removido
 
                           // Banner especial para visitantes
                           Consumer<FirebaseService>(
@@ -218,8 +214,11 @@ class _DashboardPageCleanState extends State<DashboardPageClean> {
                                   children: [
                                     const SizedBox(height: 16),
                                     GestureDetector(
-                                      onTap: () =>
-                                          Navigator.pushNamed(context, '/auth'),
+                                      onTap: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => const AuthPage(),
+                                        ),
+                                      ),
                                       child: Container(
                                         padding: const EdgeInsets.all(16),
                                         decoration: BoxDecoration(
@@ -715,15 +714,7 @@ class _DashboardPageCleanState extends State<DashboardPageClean> {
                                   duration: const Duration(milliseconds: 200),
                                   child: InkWell(
                                     onTap: () {
-                                      if (premiumService.isPremium) {
-                                        _showBulkOptionsMenu(context);
-                                      } else {
-                                        // Redirecionar para a página que permite assistir anúncio
-                                        Navigator.pushNamed(
-                                          context,
-                                          '/bulk-transactions',
-                                        );
-                                      }
+                                      _showBulkOptionsMenu(context);
                                     },
                                     borderRadius: BorderRadius.circular(20),
                                     child: Container(
@@ -759,21 +750,17 @@ class _DashboardPageCleanState extends State<DashboardPageClean> {
                                           ),
                                         ],
                                       ),
-                                      child: Column(
+                                      child: const Column(
                                         children: [
                                           Icon(
-                                            premiumService.isPremium
-                                                ? Icons.edit_note
-                                                : Icons.lock,
+                                            Icons.edit_note,
                                             color: Colors.white,
                                             size: 28,
                                           ),
-                                          const SizedBox(height: 8),
+                                          SizedBox(height: 8),
                                           Text(
-                                            premiumService.isPremium
-                                                ? 'Texto'
-                                                : 'Em Massa',
-                                            style: const TextStyle(
+                                            'Em Massa',
+                                            style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,

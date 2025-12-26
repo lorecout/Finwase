@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../widgets/safe_asset_image.dart';
 
 /// Sistema de Design Unificado baseado na LoadingScreen
 /// Contém todos os elementos visuais e componentes reutilizáveis
@@ -103,14 +104,19 @@ class DesignSystem {
         ? getDynamicBackgroundGradient(baseColor)
         : backgroundGradient;
 
-    return Container(
-      decoration: BoxDecoration(gradient: gradient),
-      child: Stack(
-        children: [
-          if (showWaves) const AnimatedWavePattern(),
-          if (showParticles) const EnhancedParticles(),
-          child,
-        ],
+    // Garantir que o background ocupe todo o espaço disponível
+    return SizedBox.expand(
+      child: Container(
+        decoration: BoxDecoration(gradient: gradient),
+        child: Stack(
+          children: [
+            if (showWaves) const Positioned.fill(child: AnimatedWavePattern()),
+            if (showParticles)
+              const Positioned.fill(child: EnhancedParticles()),
+            // O child fica por cima das animações
+            child,
+          ],
+        ),
       ),
     );
   }
@@ -163,7 +169,7 @@ class DesignSystem {
               value: progress,
               backgroundColor: Colors.transparent,
               valueColor: AlwaysStoppedAnimation<Color>(
-                Colors.white.withValues(alpha: 0.8),
+                Colors.white.withOpacity(0.8),
               ),
             ),
           ),
@@ -284,7 +290,7 @@ class AnimatedWavePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
+      ..color = Colors.white.withOpacity(0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -316,7 +322,7 @@ class EnhancedParticles extends StatefulWidget {
 
 class _EnhancedParticlesState extends State<EnhancedParticles>
     with TickerProviderStateMixin {
-  static const int PARTICLE_COUNT = 25;
+  static const int particleCount = 25;
   late List<EnhancedParticle> particles;
   late List<AnimationController> controllers;
 
@@ -330,7 +336,7 @@ class _EnhancedParticlesState extends State<EnhancedParticles>
     particles = [];
     controllers = [];
 
-    for (int i = 0; i < PARTICLE_COUNT; i++) {
+    for (int i = 0; i < particleCount; i++) {
       final controller = AnimationController(
         duration: Duration(seconds: math.Random().nextInt(20) + 15),
         vsync: this,
@@ -360,10 +366,10 @@ class _EnhancedParticlesState extends State<EnhancedParticles>
 
   Color _getRandomParticleColor() {
     final colors = [
-      Colors.white.withValues(alpha: 0.4),
-      Colors.blue.withValues(alpha: 0.3),
-      Colors.purple.withValues(alpha: 0.3),
-      Colors.cyan.withValues(alpha: 0.3),
+      Colors.white.withOpacity(0.4),
+      Colors.blue.withOpacity(0.3),
+      Colors.purple.withOpacity(0.3),
+      Colors.cyan.withOpacity(0.3),
     ];
     return colors[math.Random().nextInt(colors.length)];
   }
@@ -396,11 +402,11 @@ class _EnhancedParticlesState extends State<EnhancedParticles>
                 width: particle.size,
                 height: particle.size,
                 decoration: BoxDecoration(
-                  color: particle.color.withValues(alpha: opacity),
+                  color: particle.color.withOpacity(opacity),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: particle.color.withValues(alpha: opacity * 0.5),
+                      color: particle.color.withOpacity(opacity * 0.5),
                       blurRadius: 3,
                       spreadRadius: 1,
                     ),
@@ -568,11 +574,12 @@ class _PulsingAppIconState extends State<PulsingAppIcon>
                 boxShadow: DesignSystem.logoShadow,
               ),
               child: ClipOval(
-                child: Image.asset(
-                  'assets/icon/novo-icone.png',
-                  fit: BoxFit.cover,
+                child: SafeAssetImage(
+                  'assets/onboarding/welcome.png',
                   width: widget.size,
                   height: widget.size,
+                  fit: BoxFit.cover,
+                  fallbackAsset: null,
                 ),
               ),
             ),

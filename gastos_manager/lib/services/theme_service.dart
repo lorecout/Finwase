@@ -34,7 +34,9 @@ class CustomThemeData {
         error: errorColor ?? Colors.red,
         onPrimary: _getContrastColor(primaryColor),
         onSecondary: _getContrastColor(secondaryColor),
-        onSurface: brightness == Brightness.dark ? Colors.white : Colors.black, // Manter compatibilidade
+        onSurface: brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black, // Manter compatibilidade
         onError: Colors.white,
         brightness: brightness,
         tertiary: tertiaryColor,
@@ -205,7 +207,6 @@ class ThemeService with ChangeNotifier {
         secondary: const Color(0xFF5E35B1),
         tertiary: const Color(0xFF7E57C2),
         surface: const Color(0xFF121212),
-        background: const Color(0xFF121212), // Usar surface como background
       ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -363,18 +364,27 @@ class ThemeService with ChangeNotifier {
 
   // Inicializar tema
   Future<void> initTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeIndex = prefs.getInt(_themeKey) ?? 0;
-    final colorValue =
-        prefs.getInt(_accentColorKey) ??
-        Colors.blue.toARGB32(); // Usar azul como padrão
-    final premiumTheme = prefs.getString(_premiumThemeKey) ?? 'default';
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final themeIndex = prefs.getInt(_themeKey) ?? 0;
+      final colorValue =
+          prefs.getInt(_accentColorKey) ??
+          Colors.blue.toARGB32(); // Usar azul como padrão
+      final premiumTheme = prefs.getString(_premiumThemeKey) ?? 'default';
 
-    _themeMode = ThemeMode.values[themeIndex];
-    _accentColor = Color(colorValue);
-    _premiumTheme = premiumTheme;
-    // Debug removido para melhorar performance
-    notifyListeners();
+      _themeMode = ThemeMode.values[themeIndex];
+      _accentColor = Color(colorValue);
+      _premiumTheme = premiumTheme;
+      debugPrint('ThemeService: Tema inicializado com sucesso');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('ThemeService: Erro ao inicializar tema: $e');
+      // Usar valores padrão em caso de erro
+      _themeMode = ThemeMode.system;
+      _accentColor = Colors.blue;
+      _premiumTheme = 'default';
+      notifyListeners();
+    }
   }
 
   // Alterar modo do tema

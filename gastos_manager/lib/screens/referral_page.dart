@@ -139,9 +139,10 @@ class _ReferralPageState extends State<ReferralPage> {
                               horizontal: 24,
                             ),
                             decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primaryContainer.withOpacity(0.5),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer
+                                  .withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
                                 color: Theme.of(context).colorScheme.primary,
